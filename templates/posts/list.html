@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home - My Blog{% endblock %}
+
+{% block header_title %}Latest Posts{% endblock %}
+
+{% block content %}
+<section id="knowledge-base-search">
+    <div class="row">
+        <div class="col-12">
+            <div class="card knowledge-base-bg text-center"
+                style="background-image: url('{% static 'images/banner/banner.png' %}');">
+                <div class="card-body">
+                    <h2 class="text-primary">Welcome to My Blog</h2>
+                    <p class="card-text mb-2">
+                        <span>Popular topics: </span><span class="font-weight-bolder">Sales, Marketing, HR,
+                            Developers</span>
+                    </p>
+                    <form class="kb-search-input">
+                        <div class="input-group input-group-merge">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i data-feather="search"></i></span>
+                            </div>
+                            <input type="text" class="form-control" id="searchbar" placeholder="Ask a question...">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="knowledge-base-content">
+    <div class="row search-content-info">
+        {% for post in posts %}
+        <div class="col-md-4 col-sm-6 col-12 search-content">
+            <div class="card">
+                <div class="card-body text-center">
+                    <a href="{% url 'post_detail' post.slug %}">
+                        <div class="avatar bg-light-primary p-50 mb-1">
+                            <div class="avatar-content">
+                                <i data-feather="file-text" class="font-medium-5"></i>
+                            </div>
+                        </div>
+                        <h4 class="card-title">{{ post.title }}</h4>
+                        <p class="text-body mt-1 mb-0">
+                            {{ post.description|truncatewords:20 }}
+                        </p>
+                    </a>
+                    <div class="d-flex justify-content-between mt-2">
+                        <small class="text-muted">{{ post.created_at|date:"M d, Y" }}</small>
+                        <small class="text-muted"><i data-feather="eye"></i> {{ post.views_count }}</small>
+                    </div>
+                    <div class="d-flex justify-content-center mt-1">
+                        <span class="mr-1"><i data-feather="thumbs-up" class="text-success"></i> {{ post.likes }}</span>
+                        <span><i data-feather="thumbs-down" class="text-danger"></i> {{ post.dislikes }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center">
+            <p>No posts found.</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
