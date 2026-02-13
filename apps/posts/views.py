@@ -1,25 +1,85 @@
-from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.views.generic import DetailView, ListView
+from django.db.models import F
+from .models import Post, PostView
 
-from apps.posts.models import Post
 
-
-class HomeView(ListView):
+class PostListView(ListView):
     model = Post
-    template_name = 'posts/list.html'
-    context_object_name = 'posts'
-    ordering = ['-created_at']
+    template_name = "base.html"
+    context_object_name = "posts"
+    paginate_by = 6
 
-home_view = HomeView.as_view()
+    def get_queryset(self):
+        return (
+            Post.objects
+            .select_related("category")
+            .order_by("-created_at")
+        )
+
+post_list_view = PostListView.as_view()
 
 class PostDetailView(DetailView):
     model = Post
-    template_name = 'posts/detail.html'
-    context_object_name = 'post'
+    template_name = "posts/post_detail.html"
+    context_object_name = "post"
+    slug_field = "slug"
+    slug_url_kwarg = "slug"
 
     def get_object(self, queryset=None):
-        post = super().get_object(queryset)
-        post.views_count += 1
-        post.save(update_fields=['views_count'])
+        post = super().get_object()
+        request = self.request
+        user = request.user
+        ip = request.META.get("REMOTE_ADDR")
+
+        if user.is_authenticated:
+            already_viewed = PostView.objects.filter(
+                post=post,
+                user=user
+            ).exists()
+
+            if not already_viewed:
+                PostView.objects.create(post=post, user=user)
+                Post.objects.filter(pk=post.pk).update(
+                    views_count=F("views_count") + 1
+                )
+
+        else:
+            already_viewed = PostView.objects.filter(
+                post=post,
+                ip_address=ip
+            ).exists()
+
+            if not already_viewed:
+                PostView.objects.create(post=post, ip_address=ip)
+                Post.objects.filter(pk=post.pk).update(
+                    views_count=F("views_count") + 1
+                )
+
         return post
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Related news from the same category
+        context['related_posts'] = Post.objects.filter(
+            category=self.object.category
+        ).exclude(pk=self.object.pk).order_by("-created_at")[:5]
+        
+        # Most viewed news in this category
+        context['category_most_viewed'] = Post.objects.filter(
+            category=self.object.category
+        ).order_by("-views_count")[:5]
+        
+        # Most read across all categories for sidebar
+        context['all_most_viewed'] = Post.objects.order_by("-views_count")[:10]
+        
+        # Latest news for sidebar
+        context['latest_posts'] = Post.objects.order_by("-created_at")[:10]
+        
+        return context
+
+
 post_detail_view = PostDetailView.as_view()
+
+
+
+

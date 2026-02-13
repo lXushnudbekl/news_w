@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from apps.tags.models import Tag
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    prepopulated_fields = {'slug': ('name',)}

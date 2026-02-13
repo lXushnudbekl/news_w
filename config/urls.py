@@ -3,12 +3,10 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from apps.posts.views import home_view
-
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', home_view, name='home'),
-    path('post/', include("apps.posts.urls")),
+    path('', include("apps.core.urls")),
+
     path('ckeditor/', include('ckeditor_uploader.urls')),
 
 ]
