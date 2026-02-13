@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Yangiliklar - Zamin.uz{% endblock %}
+
+{% block content %}
+<section id="posts-list">
+    <div class="row match-height">
+        {% for post in posts %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card">
+                <a href="{% url 'post_detail' post.slug %}">
+                    {% if post.image %}
+                    <img class="card-img-top" src="{{ post.image.url }}" alt="{{ post.title }}"
+                        style="height: 200px; object-fit: cover;" />
+                    {% else %}
+                    <img class="card-img-top" src="{% static 'images/slider/06.jpg' %}" alt="{{ post.title }}"
+                        style="height: 200px; object-fit: cover;" />
+                    {% endif %}
+                </a>
+                <div class="card-body">
+                    <h4 class="card-title">
+                        <a href="{% url 'post_detail' post.slug %}" class="blog-title-truncate text-body-heading">
+                            {{ post.title|truncatechars:60 }}
+                        </a>
+                    </h4>
+                    <div class="media">
+                        <div class="media-body">
+                            <small class="text-muted mr-25">by Admin</small>
+                            <span class="text-muted ml-50 mr-25">|</span>
+                            <small class="text-muted">{{ post.created_at|date:"d M Y" }}</small>
+                        </div>
+                    </div>
+                    <div class="my-1 py-25">
+                        <a href="javascript:void(0);">
+                            <div class="badge badge-pill badge-light-info mr-50">{{ post.category.name }}</div>
+                        </a>
+                    </div>
+                    <p class="card-text blog-content-truncate">
+                        {{ post.description|striptags|truncatewords:20 }}
+                    </p>
+                    <hr />
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{% url 'post_detail' post.slug %}" class="font-weight-bold">Batafsil o'qish</a>
+                        <div class="d-flex align-items-center">
+                            <span class="text-body font-weight-bold ml-1"><i data-feather="eye" class="mr-50"></i> {{post.views_count }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-primary" role="alert">
+                <div class="alert-body">
+                    Hozircha yangiliklar yo'q.
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="Page navigation">
+                {% if is_paginated %}
+                <ul class="pagination justify-content-center mt-2">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item prev-item"><a class="page-link"
+                            href="?page={{ page_obj.previous_page_number }}"></a></li>
+                    {% else %}
+                    <li class="page-item prev-item disabled"><a class="page-link" href="#"></a></li>
+                    {% endif %}
+
+                    {% for i in paginator.page_range %}
+                    {% if page_obj.number == i %}
+                    <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                    <li class="page-item next-item"><a class="page-link"
+                            href="?page={{ page_obj.next_page_number }}"></a></li>
+                    {% else %}
+                    <li class="page-item next-item disabled"><a class="page-link" href="#"></a></li>
+                    {% endif %}
+                </ul>
+                {% endif %}
+            </nav>
+        </div>
+    </div>
+</section>
+{% endblock %}
