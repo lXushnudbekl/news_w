@@ -1,3 +1,6 @@
 from django.contrib import admin
-
-# Register your models here.
+from apps.subscriptions.models import Subscription,Tariff
+admin.site.register(Subscription)
+admin.site.register(
+Tariff
+)

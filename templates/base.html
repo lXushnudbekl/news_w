@@ -66,17 +66,8 @@
             </div>
             <ul class="nav navbar-nav align-items-center ms-auto">
                 <li class="nav-item d-none d-lg-block"><a class="nav-link nav-link-style"><i class="ficon"
-                            data-feather="moon"></i></a></li>
-                <li class="nav-item nav-search"><a class="nav-link nav-link-search"><i class="ficon"
-                            data-feather="search"></i></a>
-                    <div class="search-input">
-                        <div class="search-input-icon"><i data-feather="search"></i></div>
-                        <input class="form-control input" type="text" placeholder="Qidiruv..." tabindex="-1"
-                            data-search="search">
-                        <div class="search-input-close"><i data-feather="x"></i></div>
-                        <ul class="search-list search-list-main"></ul>
-                    </div>
-                </li>
+                            data-feather="sun"></i></a></li>
+
             </ul>
         </div>
     </nav>
@@ -85,8 +76,8 @@
 
     <!-- BEGIN: Main Menu-->
     <div class="horizontal-menu-wrapper">
-        <div class="header-navbar navbar-expand-sm navbar navbar-horizontal floating-nav navbar-light navbar-shadow menu-border container-xxl"
-            role="navigation" data-menu="menu-wrapper" data-menu-type="floating-nav">
+        <div class="header-navbar navbar-expand-sm navbar navbar-horizontal navbar-light navbar-shadow menu-border container-xxl sticky-top"
+            role="navigation" data-menu="menu-wrapper" data-menu-type="floating-nav" style="top: 0; z-index: 1030;">
             <div class="navbar-header">
                 <ul class="nav navbar-nav flex-row">
                     <li class="nav-item me-auto">
@@ -144,6 +135,16 @@
 
                 </ul>
                 <ul class="nav navbar-nav ms-auto align-items-center">
+                    <li class="nav-item nav-search"><a class="nav-link nav-link-search"><i class="ficon"
+                                data-feather="search"></i></a>
+                        <div class="search-input">
+                            <div class="search-input-icon"><i data-feather="search"></i></div>
+                            <input class="form-control input" type="text" placeholder="Qidiruv..." tabindex="-1"
+                                data-search="search">
+                            <div class="search-input-close"><i data-feather="x"></i></div>
+                            <ul class="search-list search-list-main"></ul>
+                        </div>
+                    </li>
                     {% if user.is_authenticated %}
                     <li class="nav-item dropdown dropdown-user">
                         <a class="nav-link dropdown-toggle dropdown-user-link" id="dropdown-user" href="#"
@@ -193,6 +194,91 @@
             </div>
             <div class="content-body">
                 {% block content %}
+                {% if posts %}
+                <section id="custom-news-grid">
+                    {% with all_posts=posts|dictsortreversed:"views_count" %}
+                    <div class="row match-height">
+                        <!-- Left Column: 3 News -->
+                        <div class="col-lg-3 col-md-12">
+                            <div class="row">
+                                {% for post in all_posts|slice:"2:5" %}
+                                <div class="col-12">
+                                    <div class="card mb-1">
+                                        <div class="card-body p-1">
+                                            <div class="d-flex align-items-center">
+                                                {% if post.image %}
+                                                <img src="{{ post.image.url }}" class="rounded mr-1" width="80"
+                                                    height="60" style="object-fit: cover;">
+                                                {% endif %}
+                                                <div>
+                                                    <h6 class="mb-0"><a href="{% url 'posts:post_detail' post.slug %}"
+                                                            class="text-body">{{ post.title|truncatechars:50 }}</a></h6>
+                                                    <small class="text-muted"><i data-feather="eye"></i> {{
+                                                        post.views_count }}</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Center Column: 2 Main News -->
+                        <div class="col-lg-6 col-md-12">
+                            <div class="row">
+                                {% for post in all_posts|slice:":2" %}
+                                <div class="col-12">
+                                    <div class="card border-primary mb-2">
+                                        {% if post.image %}
+                                        <img src="{{ post.image.url }}" class="card-img-top"
+                                            style="height: 250px; object-fit: cover;">
+                                        {% endif %}
+                                        <div class="card-body">
+                                            <h4 class="card-title"><a href="{% url 'posts:post_detail' post.slug %}"
+                                                    class="text-primary">{{ post.title }}</a></h4>
+                                            <p class="card-text">{{ post.description|striptags|truncatewords:20 }}</p>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span class="badge badge-light-primary">{{ post.category.name }}</span>
+                                                <small class="text-muted"><i data-feather="eye"></i> {{ post.views_count
+                                                    }} views</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Right Column: 3 News -->
+                        <div class="col-lg-3 col-md-12">
+                            <div class="row">
+                                {% for post in all_posts|slice:"5:8" %}
+                                <div class="col-12">
+                                    <div class="card mb-1">
+                                        <div class="card-body p-1">
+                                            <div class="d-flex align-items-center">
+                                                {% if post.image %}
+                                                <img src="{{ post.image.url }}" class="rounded mr-1" width="80"
+                                                    height="60" style="object-fit: cover;">
+                                                {% endif %}
+                                                <div>
+                                                    <h6 class="mb-0"><a href="{% url 'posts:post_detail' post.slug %}"
+                                                            class="text-body">{{ post.title|truncatechars:50 }}</a></h6>
+                                                    <small class="text-muted"><i data-feather="eye"></i> {{
+                                                        post.views_count }}</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endwith %}
+                </section>
+                {% endif %}
                 {% endblock %}
             </div>
         </div>
