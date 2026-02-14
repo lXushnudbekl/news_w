@@ -1,8 +1,12 @@
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from apps.core.views import dashboard
 
 urlpatterns = [
+    path('', dashboard, name='dashboard'),
+    path('category/', include("apps.categories.urls")),
+
     path('post/', include("apps.posts.urls")),
     # path('categories/', include("apps.categories.urls")),
     # path('tags/', include("apps.tags.urls")),

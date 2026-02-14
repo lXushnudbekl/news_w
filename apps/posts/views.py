@@ -3,20 +3,7 @@ from django.db.models import F
 from .models import Post, PostView
 
 
-class PostListView(ListView):
-    model = Post
-    template_name = "base.html"
-    context_object_name = "posts"
-    paginate_by = 6
 
-    def get_queryset(self):
-        return (
-            Post.objects
-            .select_related("category")
-            .order_by("-created_at")
-        )
-
-post_list_view = PostListView.as_view()
 
 class PostDetailView(DetailView):
     model = Post
@@ -79,6 +66,8 @@ class PostDetailView(DetailView):
 
 
 post_detail_view = PostDetailView.as_view()
+
+
 
 
 
