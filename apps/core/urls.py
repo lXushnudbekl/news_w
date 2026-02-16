@@ -8,6 +8,7 @@ urlpatterns = [
     path('category/', include("apps.categories.urls")),
 
     path('post/', include("apps.posts.urls")),
+    path('profile/', include("apps.accounts.urls")),
     # path('categories/', include("apps.categories.urls")),
     # path('tags/', include("apps.tags.urls")),
     # path('accounts/', include("apps.accounts.urls")),

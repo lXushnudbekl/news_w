@@ -192,7 +192,7 @@ CKEDITOR_CONFIGS = {
             # your extra plugins here
             'div',
             'autolink',
-            'autoembed',
+            # 'autoembed',
             'embedsemantic',
             'autogrow',
             # 'devtools',
