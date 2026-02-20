@@ -10,7 +10,10 @@
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-1">
-                        <span type="button" class="badge badge-light-primary waves-effect waves-float waves-light">{{ post.category.name }}</span>
+                        <a href="{% url 'category_posts' post.category.slug %}"
+                           class="badge badge-light-primary waves-effect waves-float waves-light">
+                            {{ post.category.name }}
+                        </a>
                         <span class="text-muted"><i data-feather="calendar"
                                                     class="me-25"></i> {{ post.created_at|date:"d.m.Y H:i" }}</span>
                     </div>
@@ -43,7 +46,8 @@
                         <div class="post-tags">
                             <span class="me-50 fw-bold">Teglar:</span>
                             {% for tag in post.tags.all %}
-                                <a href="#" class="btn btn-sm btn-light-secondary mb-25 me-25">#{{ tag.name }}</a>
+                                <a href="{% url 'tag_posts' tag.slug %}"
+                                   class="btn btn-sm btn-light-secondary mb-25 me-25">#{{ tag.name }}</a>
                             {% endfor %}
                         </div>
                     </div>

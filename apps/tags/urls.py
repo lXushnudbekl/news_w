@@ -1,9 +1,6 @@
-from django.urls import path, include
-from django.conf import settings
-from django.conf.urls.static import static
-from apps.core.views import dashboard
+from django.urls import path
+from .views import TagPostListView
 
 urlpatterns = [
-    path('', dashboard, name='dashboard'),
-    path('post/', include("apps.posts.urls")),
+    path('<slug:slug>/', TagPostListView.as_view(), name='tag_posts'),
 ]

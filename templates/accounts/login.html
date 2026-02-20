@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Kirish - Zamin.uz{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper auth-v1 px-2 d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="auth-inner py-2" style="max-width: 400px; width: 100%;">
+        <!-- Login v1 -->
+        <div class="card mb-0 shadow-lg">
+            <div class="card-body">
+                <a href="/" class="brand-logo d-flex justify-content-center mb-2">
+                    <h2 class="brand-text text-primary ms-1 fw-bolder">Zamin.uz</h2>
+                </a>
+
+                <h4 class="card-title mb-1 text-center">Xush kelibsiz! 👋</h4>
+                <p class="card-text mb-2 text-center">Tizimga kirish uchun ma'lumotlaringizni kiriting.</p>
+
+                <form class="auth-login-form mt-2" method="POST">
+                    {% csrf_token %}
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                        <div class="alert-body">
+                            {{ form.non_field_errors }}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="mb-1">
+                        <label for="login-email" class="form-label">Username yoki Email</label>
+                        {{ form.username }}
+                        {% if form.username.errors %}
+                        <div class="invalid-feedback d-block">{{ form.username.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-1">
+                        <div class="d-flex justify-content-between">
+                            <label class="form-label" for="login-password">Parol</label>
+                            <a href="#">
+                                <small>Parolni unutdingizmi?</small>
+                            </a>
+                        </div>
+                        <div class="input-group input-group-merge form-password-toggle">
+                            {{ form.password }}
+                            <span class="input-group-text cursor-pointer"><i data-feather="eye"></i></span>
+                        </div>
+                        {% if form.password.errors %}
+                        <div class="invalid-feedback d-block">{{ form.password.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-1">
+                        <div class="form-check">
+                            {{ form.remember_me }}
+                            <label class="form-check-label" for="remember-me"> Meni eslab qol </label>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary w-100" tabindex="4">Kirish</button>
+                </form>
+
+                <p class="text-center mt-2">
+                    <span>Platformada yangimisiz?</span>
+                    <a href="{% url 'register' %}">
+                        <span>Hisob yaratish</span>
+                    </a>
+                </p>
+            </div>
+        </div>
+        <!-- /Login v1 -->
+    </div>
+</div>
+{% endblock %}

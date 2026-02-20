@@ -1,13 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Tag: #{{ tag.name }} - Zamin.uz{% endblock %}
+{% block title %}Qidiruv: {{ query }} - Zamin.uz{% endblock %}
 
 {% block content %}
 <div class="row">
     <div class="col-12">
-        <h4 class="mb-2"><i data-feather="tag" class="me-50"></i>Tag: <span class="text-primary">#{{ tag.name }}</span>
-        </h4>
+        <h4 class="mb-2">"<span class="text-primary">{{ query }}</span>" bo'yicha qidiruv natijalari</h4>
 
         {% if posts %}
         <div class="row">
@@ -36,19 +35,19 @@
             <ul class="pagination justify-content-center mt-2">
                 {% if page_obj.has_previous %}
                 <li class="page-item prev">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}"></a>
+                    <a class="page-link" href="?q={{ query }}&page={{ page_obj.previous_page_number }}"></a>
                 </li>
                 {% endif %}
 
                 {% for num in page_obj.paginator.page_range %}
                 <li class="page-item {% if page_obj.number == num %}active{% endif %}">
-                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    <a class="page-link" href="?q={{ query }}&page={{ num }}">{{ num }}</a>
                 </li>
                 {% endfor %}
 
                 {% if page_obj.has_next %}
                 <li class="page-item next">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}"></a>
+                    <a class="page-link" href="?q={{ query }}&page={{ page_obj.next_page_number }}"></a>
                 </li>
                 {% endif %}
             </ul>
@@ -58,7 +57,7 @@
         {% else %}
         <div class="alert alert-warning" role="alert">
             <div class="alert-body">
-                Ushbu tag bilan bog'langan postlar topilmadi.
+                Hech qanday natija topilmadi. Boshqa kalit so'z bilan qayta urinib ko'ring.
             </div>
         </div>
         {% endif %}

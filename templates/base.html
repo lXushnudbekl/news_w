@@ -165,12 +165,15 @@
                 <ul class="nav navbar-nav ms-auto align-items-center">
                     <!-- Search -->
                     <li class="nav-item d-none d-lg-block">
-                        <div class="d-flex align-items-center bg-light rounded-pill px-1 me-1"
-                            style="border: 1px solid #ddd;">
-                            <i data-feather="search" class="font-small-3 text-muted"></i>
-                            <input type="text" class="form-control border-0 bg-transparent py-25 px-50"
-                                placeholder="Qidiruv..." style="width: 150px; font-size: 0.85rem;">
-                        </div>
+                        <form action="{% url 'post_search' %}" method="GET">
+                            <div class="d-flex align-items-center bg-light rounded-pill px-1 me-1"
+                                style="border: 1px solid #ddd;">
+                                <i data-feather="search" class="font-small-3 text-muted"></i>
+                                <input type="text" name="q" class="form-control border-0 bg-transparent py-25 px-50"
+                                    placeholder="Qidiruv..." style="width: 150px; font-size: 0.85rem;"
+                                    value="{{ query|default:'' }}">
+                            </div>
+                        </form>
                     </li>
                     <!-- Theme -->
                     <li class="nav-item">
@@ -192,16 +195,23 @@
                             </span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-user">
-                            <a class="dropdown-item" href="/profile/"><i class="me-50" data-feather="user"></i>
+                            <a class="dropdown-item" href="{% url 'dashboard' %}"><i class="me-50"
+                                    data-feather="user"></i>
                                 Profile</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="/logout/"><i class="me-50" data-feather="power"></i>
+                            <a class="dropdown-item" href="{% url 'logout' %}"><i class="me-50"
+                                    data-feather="power"></i>
                                 Logout</a>
                         </div>
                     </li>
                     {% else %}
                     <li class="nav-item">
-                        <a class="nav-link px-50" href="/login/"><i data-feather="log-in" class="me-25"></i></a>
+                        <a class="nav-link px-50" href="{% url 'login' %}"><i data-feather="log-in" class="me-25"></i>
+                            Kirish</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-50" href="{% url 'register' %}"><i data-feather="user-plus"
+                                class="me-25"></i> Ro'yxatdan o'tish</a>
                     </li>
                     {% endif %}
                 </ul>
@@ -229,11 +239,49 @@
     <div class="drag-target"></div>
 
     <!-- BEGIN: Footer-->
-{#    <footer class="footer footer-static footer-light">#}
-{#        <p class="clearfix mb-0"><span class="float-md-start d-block d-md-inline-block mt-25">COPYRIGHT &copy; 2026<a#}
-{#                    class="ms-25" href="/" target="_blank">Zamin.uz</a><span class="d-none d-sm-inline-block">, All#}
-{#                    rights Reserved</span></span></p>#}
-{#    </footer>#}
+    <footer class="footer footer-static footer-light border-top mt-5 pt-3 pb-3">
+        <div class="container-xxl">
+            <div class="row">
+                <div class="col-md-4 col-12 mb-2">
+                    <h5 class="fw-bolder">Zamin.uz</h5>
+                    <p class="text-muted small mt-1">
+                        Zamin.uz - O'zbekiston va jahon yangiliklari, tahliliy materiallar va eng so'nggi xabarlar
+                        portalidir.
+                        Sifatli kontent va aniq ma'lumotlar bizning asosiy maqsadimizdir.
+                    </p>
+                </div>
+                <div class="col-md-4 col-12 mb-2">
+                    <h5 class="fw-bolder">Sayt haqida</h5>
+                    <ul class="list-unstyled small mt-1">
+                        <li><a href="#" class="text-muted">Biz haqimizda</a></li>
+                        <li><a href="#" class="text-muted">Foydalanish shartlari</a></li>
+                        <li><a href="#" class="text-muted">Maxfiylik siyosati</a></li>
+                        <li><a href="#" class="text-muted">Aloqa</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 col-12 mb-2">
+                    <h5 class="fw-bolder">Obuna bo'ling</h5>
+                    <p class="text-muted small mt-1">Yangiliklarni birinchilardan bo'lib bilish uchun bizni ijtimoiy
+                        tarmoqlarda kuzatib boring.</p>
+                    <div class="d-flex mt-1">
+                        <a href="#" class="me-1 text-primary"><i data-feather="facebook"></i></a>
+                        <a href="#" class="me-1 text-info"><i data-feather="twitter"></i></a>
+                        <a href="#" class="me-1 text-danger"><i data-feather="instagram"></i></a>
+                        <a href="#" class="text-primary"><i data-feather="send"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2 border-top pt-2">
+                <div class="col-12 text-center">
+                    <p class="clearfix mb-0">
+                        <span class="float-md-start d-block d-md-inline-block mt-25">COPYRIGHT &copy; 2026
+                            <a class="ms-25" href="/" target="_blank">Zamin.uz</a>
+                            <span class="d-none d-sm-inline-block">, Barcha huquqlar himoyalangan</span></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
     <button class="btn btn-primary btn-icon scroll-top" type="button"><i data-feather="arrow-up"></i></button>
     <!-- END: Footer-->
 

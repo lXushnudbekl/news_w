@@ -5,164 +5,194 @@
 
 {% block content %}
 <div class="row">
-    <!-- User Profile & Subscription Summary -->
-    <div class="col-lg-4 col-md-5 col-12">
-        <div class="card">
+    <!-- Profile and Stats -->
+    <div class="col-lg-12 col-12">
+        <div class="card card-profile">
             <div class="card-body">
-                <div class="user-avatar-section">
-                    <div class="d-flex align-items-center flex-column">
-                        <img class="img-fluid rounded mt-3 mb-2"
-                            src="{% static 'images/portrait/small/avatar-s-11.jpg' %}" height="110" width="110"
-                            alt="User avatar" />
-                        <div class="user-info text-center">
-                            <h4>{{ user.username }}</h4>
-                            <span class="badge badge-light-secondary">User</span>
-                        </div>
+                <div class="row">
+                    <div class="col-md-2 text-center mb-1 mb-md-0">
+                        <img src="{% if user.avatar %}{{ user.avatar.url }}{% else %}{% static 'images/portrait/small/avatar-s-11.jpg' %}{% endif %}"
+                            class="rounded shadow" style="width: 100px; height: 100px; object-fit: cover;" alt="user">
                     </div>
-                </div>
-                <div class="d-flex justify-content-around my-2 pt-75">
-                    <div class="d-flex align-items-start me-2">
-                        <span class="badge bg-light-primary p-75 rounded">
-                            <i data-feather="check" class="font-medium-2"></i>
-                        </span>
-                        <div class="ms-75">
-                            <h4 class="mb-0">Aktiv</h4>
-                            <small>Holat</small>
-                        </div>
+                    <div class="col-md-5">
+                        <h4 class="mb-50">{{ user.username }}</h4>
+                        <p class="card-text mb-50">{{ user.email }}</p>
+                        <p class="card-text mb-0"><span class="badge badge-light-primary">{{ user.role|title }}</span>
+                        </p>
                     </div>
-                </div>
-                <h4 class="fw-bolder border-bottom pb-50 mb-1">Tafsilotlar</h4>
-                <div class="info-container">
-                    <ul class="list-unstyled">
-                        <li class="mb-75">
-                            <span class="fw-bolder me-25">Elektron pochta:</span>
-                            <span>{{ user.email }}</span>
-                        </li>
-                        <li class="mb-75">
-                            <span class="fw-bolder me-25">Tarif:</span>
-                            <span class="badge badge-light-success">
-                                {% if user_subscription %}
-                                {{ user_subscription.tariff.name }}
-                                {% else %}
-                                Tarif yo'q
-                                {% endif %}
-                            </span>
-                        </li>
-                    </ul>
+                    <div class="col-md-5 text-md-end">
+                        <a href="{% url 'profile_settings' %}" class="btn btn-outline-primary"><i
+                                data-feather="settings" class="me-25"></i> Sozlamalar</a>
+                        <a href="{% url 'post_create' %}" class="btn btn-primary"><i data-feather="plus"
+                                class="me-25"></i> Yangi post qo'shish</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Tariff Features & Management -->
-    <div class="col-lg-8 col-md-7 col-12">
-        <!-- Tariff Selection / Display -->
-        <div class="card">
-            <div class="card-header border-bottom">
-                <h4 class="card-title">Mavjud Tariflar</h4>
-            </div>
-            <div class="card-body pt-2">
-                <div class="row">
-                    <!-- SMS Tariff -->
-                    <div class="col-md-4 col-12 mb-2">
-                        <div class="card border rounded text-center h-100">
-                            <div class="card-body">
-                                <i data-feather="mail" class="font-large-2 text-primary mb-1"></i>
-                                <h5>SMS</h5>
-                                <p class="card-text">Yangiliklarni SMS orqali yuborish</p>
-                                <button class="btn btn-outline-primary btn-sm">Tanlash</button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Posting Tariff -->
-                    <div class="col-md-4 col-12 mb-2">
-                        <div class="card border rounded text-center h-100">
-                            <div class="card-body">
-                                <i data-feather="edit" class="font-large-2 text-primary mb-1"></i>
-                                <h5>Posting</h5>
-                                <p class="card-text">O'z yangiliklaringizni joylash</p>
-                                <button class="btn btn-outline-primary btn-sm">Tanlash</button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- SMS + Posting -->
-                    <div class="col-md-4 col-12 mb-2">
-                        <div class="card border border-primary rounded text-center h-100">
-                            <div class="card-body">
-                                <i data-feather="zap" class="font-large-2 text-primary mb-1"></i>
-                                <h5>SMS + Posting</h5>
-                                <p class="card-text">Barcha imkoniyatlar birda</p>
-                                <button class="btn btn-primary btn-sm">Tanlash</button>
-                            </div>
-                        </div>
+    <!-- Stats Cards -->
+    <div class="col-lg-3 col-sm-6 col-12">
+        <div class="card text-center">
+            <div class="card-body">
+                <div class="avatar bg-light-primary p-50 mb-1">
+                    <div class="avatar-content">
+                        <i data-feather="file-text" class="font-medium-5"></i>
                     </div>
                 </div>
+                <h2 class="fw-bolder">{{ total_posts }}</h2>
+                <p class="card-text">Barcha postlar</p>
             </div>
         </div>
+    </div>
+    <div class="col-lg-3 col-sm-6 col-12">
+        <div class="card text-center">
+            <div class="card-body">
+                <div class="avatar bg-light-success p-50 mb-1">
+                    <div class="avatar-content">
+                        <i data-feather="eye" class="font-medium-5"></i>
+                    </div>
+                </div>
+                <h2 class="fw-bolder">{{ total_views }}</h2>
+                <p class="card-text">Jami ko'rishlar</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-sm-6 col-12">
+        <div class="card text-center">
+            <div class="card-body">
+                <div class="avatar bg-light-warning p-50 mb-1">
+                    <div class="avatar-content">
+                        <i data-feather="star" class="font-medium-5"></i>
+                    </div>
+                </div>
+                <h2 class="fw-bolder" style="font-size: 0.9rem; line-height: 2;">{{most_popular.title|truncatechars:15|default:"-" }}</h2>
+                <p class="card-text">Eng mashhur post</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-sm-6 col-12">
+        <div class="card text-center">
+            <div class="card-body">
+                <div class="avatar bg-light-info p-50 mb-1">
+                    <div class="avatar-content">
+                        <i data-feather="award" class="font-medium-5"></i>
+                    </div>
+                </div>
+                <h2 class="fw-bolder">{{ active_subscription.tariff.name|default:"Bepul" }}</h2>
+                <p class="card-text">Obuna turi</p>
+            </div>
+        </div>
+    </div>
 
-        <!-- SMS Management Section (Only for SMS Tariff users) -->
-        {% if user_subscription.tariff.can_sms or True %} {# True used for demonstration if backend logic not yet
-        connected #}
-        <div class="card mt-2">
+    <!-- Subscription Status -->
+    <div class="col-md-6 col-12">
+        <div class="card">
             <div class="card-header border-bottom">
-                <h4 class="card-title">SMS Boshqaruvi</h4>
+                <h4 class="card-title">Obuna holati</h4>
             </div>
             <div class="card-body pt-2">
-                <form id="sms-settings-form">
-                    <div class="mb-2">
-                        <label class="form-label">SMS xabarnoma yuboriladigan kategoriyalarni tanlang:</label>
-                        <div class="demo-inline-spacing">
-                            {% for category in categories %}
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="cat-{{ category.id }}"
-                                    value="{{ category.id }}">
-                                <label class="form-check-label" for="cat-{{ category.id }}">{{ category.name }}</label>
-                            </div>
-                            {% empty %}
-                            <p class="text-muted">Kategoriyalar mavjud emas</p>
-                            {% endfor %}
-                        </div>
-                    </div>
-
-                    <div class="alert alert-primary p-1 mb-2">
-                        <div class="alert-body d-flex align-items-center">
-                            <i data-feather="info" class="me-50"></i>
-                            <span>Har kuni eng ko'p ko'rilgan yangilik bo'yicha SMS yuboriladi.</span>
-                        </div>
-                    </div>
-
-                    <div class="daily-report border rounded p-1 mb-2">
-                        <h6 class="mb-1">Bugungi eng ko'p ko'rilgan post:</h6>
-                        {% if daily_top_post %}
-                        <div class="d-flex align-items-center">
-                            {% if daily_top_post.image %}
-                            <img src="{{ daily_top_post.image.url }}" class="rounded me-1" width="60" height="40"
-                                style="object-fit: cover;">
-                            {% endif %}
-                            <div>
-                                <p class="mb-0 fw-bold">{{ daily_top_post.title }}</p>
-                                <small class="text-muted"><i data-feather="eye"></i> {{ daily_top_post.views_count }}
-                                    ko'rishlar</small>
-                            </div>
-                        </div>
-                        <div class="mt-1">
-                            <span class="badge badge-light-info">SMS holati: {% if already_sent %}Yuborilgan{% else
-                                %}Kutilmoqda{% endif %}</span>
-                            {% if already_sent %}
-                            <small class="d-block text-warning mt-25">Bu post kecha ham eng ko'p ko'rilgan, shuning
-                                uchun qayta SMS yuborilmadi.</small>
-                            {% endif %}
-                        </div>
-                        {% else %}
-                        <p class="text-muted">Bugun hali ma'lumotlar yo'q.</p>
-                        {% endif %}
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">Sozlamalarni saqlash</button>
-                </form>
+                <p><strong>Tarif:</strong> {{ active_subscription.tariff.name|default:"Tanlanmagan" }}</p>
+                <p><strong>Boshlanish vaqti:</strong> {{ active_subscription.start_date|date:"d.m.Y"|default:"-" }}</p>
+                <p><strong>Tugash vaqti:</strong> {{ active_subscription.end_date|date:"d.m.Y"|default:"-" }}</p>
+                <p><strong>Post limiti:</strong> {{ active_subscription.tariff.post_limit|default:0 }} (Qolgani: {{active_subscription.tariff.post_limit|default:0|add:total_posts|add:"0" }})</p>
+                <p><strong>Holati:</strong> <span
+                        class="badge badge-light-{% if active_subscription.is_valid %}success{% else %}danger{% endif %}">{{active_subscription.is_active|yesno:"Faol,Nofaol" }}</span></p>
             </div>
         </div>
-        {% endif %}
+    </div>
+
+    <!-- SMS Subscription Section -->
+    <div class="col-md-6 col-12">
+        <div class="card">
+            <div class="card-header border-bottom">
+                <h4 class="card-title">SMS Obuna</h4>
+            </div>
+            <div class="card-body pt-2">
+                {% if sms_subscription %}
+                <p><strong>Holati:</strong> <span class="badge badge-light-success">Faol</span></p>
+                <p><strong>SMS limiti:</strong> {{ sms_subscription.tariff.sms_limit }}</p>
+                <p><strong>Ishlatilgan:</strong> {{ sms_subscription.sms_used }}</p>
+                <form action="#" method="POST">
+                    {% csrf_token %}
+                    <div class="mb-1">
+                        <label class="form-label">Kategoriyani tanlang</label>
+                        <select class="form-select">
+                            {% for cat in categories %}
+                            <option value="{{ cat.id }}">{{ cat.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-sm btn-outline-success">Saqlash</button>
+                </form>
+                {% else %}
+                <div class="alert alert-warning" role="alert">
+                    <div class="alert-body">
+                        Sizda SMS obuna mavjud emas. <a href="#" class="alert-link">Sotib olish</a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- My Posts Table -->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header border-bottom d-flex justify-content-between">
+                <h4 class="card-title">Mening postlarim</h4>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Sarlavha</th>
+                            <th>Holat</th>
+                            <th>Sana</th>
+                            <th>Ko'rishlar</th>
+                            <th>Amallar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for post in posts %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    {% if post.image %}
+                                    <img src="{{ post.image.url }}" class="rounded me-1" height="40" width="40"
+                                        alt="img">
+                                    {% endif %}
+                                    <span class="fw-bolder">{{ post.title|truncatechars:50 }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span
+                                    class="badge rounded-pill badge-light-{% if post.status == 'published' %}success{% elif post.status == 'pending' %}warning{% else %}secondary{% endif %}">
+                                    {{ post.get_status_display }}
+                                </span>
+                            </td>
+                            <td>{{ post.created_at|date:"d.m.Y" }}</td>
+                            <td><i data-feather="eye" class="me-25"></i> {{ post.views_count }}</td>
+                            <td>
+                                <a href="{% url 'post_update' post.pk %}"
+                                    class="btn btn-icon btn-sm btn-flat-primary"><i data-feather="edit"></i></a>
+                                <form action="{% url 'post_delete' post.pk %}" method="POST" style="display:inline;"
+                                    onsubmit="return confirm('Haqiqatan ham o‘chirmoqchimisiz?')">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-icon btn-sm btn-flat-danger"><i
+                                            data-feather="trash-2"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-2">Hali postlar yo'q</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

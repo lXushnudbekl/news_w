@@ -10,9 +10,9 @@ urlpatterns = [
     path('post/', include("apps.posts.urls")),
     path('profile/', include("apps.accounts.urls")),
     # path('categories/', include("apps.categories.urls")),
-    # path('tags/', include("apps.tags.urls")),
+    path('tag/', include("apps.tags.urls")),
     # path('accounts/', include("apps.accounts.urls")),
     # path('payments/', include("apps.payments.urls")),
-    # path('subscriptions/', include("apps.subscriptions.urls")),
+    path('subscriptions/', include("apps.subscriptions.urls")),
     # path('sms/', include("apps.sms.urls")),
 ]

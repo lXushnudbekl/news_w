@@ -1,0 +1,58 @@
+3.{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Tariflar - Zamin.uz{% endblock %}
+
+{% block content %}
+<div class="pricing-free-trial">
+    <div class="row">
+        <div class="col-12 text-center mb-5">
+            <h1 class="pricing-title">O'zingizga mos tarifni tanlang</h1>
+            <p class="pricing-subtitle">Post qo'shish yoki SMS xizmatlaridan foydalanish uchun obuna bo'ling.</p>
+        </div>
+    </div>
+
+    <!-- Pricing cards -->
+    <div class="row pricing-card justify-content-center">
+        {% for tariff in tariffs %}
+        <div class="col-12 col-sm-offset-2 col-sm-10 col-md-offset-2 col-md-10 col-lg-offset-2 col-lg-4 col-xl-3">
+            <div class="card shadow-none border rounded text-center mb-3">
+                <div class="card-body">
+                    <img src="{% static 'images/illustration/Pot1.svg' %}" class="mb-2 mt-5" alt="svg img"
+                        width="120" />
+                    <h3>{{ tariff.name }}</h3>
+                    <p class="card-text">{{ tariff.duration_days }} kunlik obuna</p>
+                    <div class="pricing-price mt-2 mb-2">
+                        <sup class="font-medium-1 fw-bold text-primary">sum</sup>
+                        <span
+                            class="pricing-basic-value fw-bolder text-primary display-4">{{tariff.price|floatformat:0}}</span>
+                    </div>
+                    <ul class="list-group list-group-circle text-start mb-2">
+                        {% if tariff.can_post %}
+                        <li class="list-group-item">Post qo'shish imkoniyati ({{ tariff.post_limit }} gacha)</li>
+                        {% endif %}
+
+                        {% if tariff.can_sms %}
+                        <li class="list-group-item">SMS xizmati ({{ tariff.sms_limit }} ta paket)</li>
+                        {% endif %}
+
+                        {% if tariff.can_email %}
+                        <li class="list-group-item">Email xizmati</li>
+                        {% endif %}
+
+                        <li class="list-group-item text-success">Narxi: 0 sum</li>
+                        <li class="list-group-item">24/7 qo'llab-quvvatlash</li>
+                    </ul>
+                    <form action="{% url 'purchase_tariff' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="tariff_id" value="{{ tariff.id }}">
+                        <button type="submit" class="btn btn-outline-primary w-100">Sotib olish</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <!--/ Pricing cards -->
+</div>
+{% endblock %}

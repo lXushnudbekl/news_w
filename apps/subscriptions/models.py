@@ -20,6 +20,8 @@ class Tariff(models.Model):
 
     can_post = models.BooleanField(default=False)
     can_sms = models.BooleanField(default=False)
+    can_email = models.BooleanField(default=False)
+    post_limit = models.IntegerField(default=0)  # max postlar soni
 
     def __str__(self):
         return self.name

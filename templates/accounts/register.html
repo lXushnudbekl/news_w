@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Ro'yxatdan o'tish - Zamin.uz{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper auth-v1 px-2 d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="auth-inner py-2" style="max-width: 450px; width: 100%;">
+        <!-- Register v1 -->
+        <div class="card mb-0 shadow-lg">
+            <div class="card-body">
+                <a href="/" class="brand-logo d-flex justify-content-center mb-1">
+                    <h2 class="brand-text text-primary ms-1 fw-bolder">Zamin.uz</h2>
+                </a>
+
+                <h4 class="card-title mb-50 text-center">Sarguzasht bu yerdan boshlanadi 🚀</h4>
+                <p class="card-text mb-2 text-center">Ilovangizni boshqarishni oson va qiziqarli qiling!</p>
+
+                <form class="auth-register-form mt-2" method="POST">
+                    {% csrf_token %}
+
+                    {% if form.errors and not form.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                        <div class="alert-body">
+                            Iltimos, barcha maydonlarni to'g'ri to'ldiring.
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="mb-1">
+                        <label for="register-username" class="form-label">Foydalanuvchi nomi</label>
+                        {{ form.username }}
+                        {% if form.username.errors %}
+                        <div class="invalid-feedback d-block">{{ form.username.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-1">
+                        <label for="register-email" class="form-label">Email</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                        <div class="invalid-feedback d-block">{{ form.email.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-1">
+                        <label for="register-phone" class="form-label">Telefon raqami</label>
+                        {{ form.phone }}
+                        {% if form.phone.errors %}
+                        <div class="invalid-feedback d-block">{{ form.phone.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-1">
+                        <label for="register-password" class="form-label">Parol</label>
+                        <div class="input-group input-group-merge form-password-toggle">
+                            {{ form.password }}
+                            <span class="input-group-text cursor-pointer"><i data-feather="eye"></i></span>
+                        </div>
+                        {% if form.password.errors %}
+                        <div class="invalid-feedback d-block">{{ form.password.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-1">
+                        <label for="register-confirm-password" class="form-label">Parolni tasdiqlash</label>
+                        <div class="input-group input-group-merge form-password-toggle">
+                            {{ form.confirm_password }}
+                            <span class="input-group-text cursor-pointer"><i data-feather="eye"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-1">
+                        <div class="form-check text-start">
+                            <input class="form-check-input" type="checkbox" id="register-privacy-policy" tabindex="4"
+                                required />
+                            <label class="form-check-label" for="register-privacy-policy">
+                                Men <a href="#">maxfiylik siyosati va shartlariga</a> roziman
+                            </label>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary w-100" tabindex="5">Ro'yxatdan o'tish</button>
+                </form>
+
+                <p class="text-center mt-2">
+                    <span>Sizda allaqachon hisob bormi?</span>
+                    <a href="{% url 'login' %}">
+                        <span>Tizimga kiring</span>
+                    </a>
+                </p>
+            </div>
+        </div>
+        <!-- /Register v1 -->
+    </div>
+</div>
+{% endblock %}

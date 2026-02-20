@@ -43,7 +43,8 @@
                                     <i data-feather="eye" class="me-25 font-small-3"></i>{{ post.views_count }}
                                 </span>
                                 <span class="d-flex align-items-center">
-                                    <i data-feather="calendar" class="me-25 font-small-3"></i>{{ post.created_at|date:"d.m.Y" }}
+                                    <i data-feather="calendar" class="me-25 font-small-3"></i>{{
+                                    post.created_at|date:"d.m.Y" }}
                                 </span>
                             </div>
                         </div>
@@ -57,7 +58,7 @@
     <!-- Right Sidebar (3 news) -->
     <div class="col-lg-3 col-12 order-lg-3 order-3">
         <h4 class="mb-1 border-bottom pb-50"><i data-feather="star" class="me-50"></i>Tavsiya</h4>
-        {% for post in sorted_posts|slice:"5:8" %}
+        {% for post in recommended_posts|slice:":3" %}
         <a href="{% url 'post_detail' post.slug %}" class="zamin-post-item">
             {% if post.image %}
             <img src="{{ post.image.url }}" class="zamin-post-image" alt="{{ post.title }}">
@@ -65,11 +66,15 @@
             <div class="zamin-post-content">
                 <span class="zamin-post-title">{{ post.title }}</span>
                 <div class="zamin-post-meta d-flex align-items-center">
-                    <i data-feather="eye" class="me-25 font-small-3"></i>
+                    <i data-feather="thumbs-up" class="me-25 font-small-3"></i>
+                    <span>{{ post.net_likes }}</span>
+                    <i data-feather="eye" class="ms-50 me-25 font-small-3"></i>
                     <span>{{ post.views_count }}</span>
                 </div>
             </div>
         </a>
+        {% empty %}
+        <div class="text-muted small">Hozircha tavsiyalar yo'q</div>
         {% endfor %}
     </div>
     {% endwith %}
@@ -91,8 +96,10 @@
                             <img src="{{ post.image.url }}" class="img-fluid rounded mb-50"
                                 style="height:140px; width:100%; object-fit:cover;">
                             {% endif %}
-                            <div class="fw-bolder text-truncate-2" style="font-size: 0.9rem; line-height:1.2;">{{ post.title }}</div>
-                            <small class="text-muted"><i data-feather="eye" class="me-25 font-small-2"></i>{{ post.views_count }}</small>
+                            <div class="fw-bolder text-truncate-2" style="font-size: 0.9rem; line-height:1.2;">{{
+                                post.title }}</div>
+                            <small class="text-muted"><i data-feather="eye" class="me-25 font-small-2"></i>{{
+                                post.views_count }}</small>
                         </a>
                     </div>
                     {% empty %}
@@ -118,7 +125,8 @@
                 <h5 class="fw-bolder mb-50 text-truncate-2" style="min-height:3rem;">{{ post.title }}</h5>
                 <div class="d-flex align-items-center justify-content-between">
                     <small class="text-muted">{{ post.created_at|date:"d.m.Y H:i" }}</small>
-                    <small class="text-muted"><i data-feather="eye" class="me-25 font-small-3"></i>{{ post.views_count }}</small>
+                    <small class="text-muted"><i data-feather="eye" class="me-25 font-small-3"></i>{{ post.views_count
+                        }}</small>
                 </div>
             </a>
         </div>

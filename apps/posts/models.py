@@ -11,6 +11,12 @@ from django.utils.crypto import get_random_string
 
 
 class Post(models.Model):
+    STATUS_CHOICES = (
+        ('draft', 'Draft'),
+        ('pending', 'Pending'),
+        ('published', 'Published')
+    )
+
     title = models.CharField(max_length=255)
     image = models.ImageField(upload_to="posts/%Y/%m/%d", blank=True)
     description = RichTextUploadingField()
@@ -22,6 +28,7 @@ class Post(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     author = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True)
     tags = models.ManyToManyField(Tag, blank=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
 
     def __str__(self):
         return self.title

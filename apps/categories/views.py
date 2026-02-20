@@ -41,6 +41,7 @@ class CategoryPostView(ListView):
 
     def get_queryset(self):
         return Post.objects.filter(
+            status='published',
             category__slug=self.kwargs['slug']
         ).order_by("-created_at")
 
