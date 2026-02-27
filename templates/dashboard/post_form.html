@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if form.instance.pk %}Tahrirlash{% else %}Yangi yangilik{% endif %} - Zamin.uz{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'vendors/css/forms/select/select2.min.css' %}">
+<style>
+    .django-ckeditor-widget {
+        width: 100% !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header border-bottom">
+                <h4 class="card-title">
+                    <i data-feather="edit-3" class="me-50"></i>
+                    {% if form.instance.pk %}Yangilikni tahrirlash{% else %}Yangi yangilik qo'shish{% endif %}
+                </h4>
+            </div>
+            <div class="card-body pt-2">
+                <form method="post" enctype="multipart/form-data" class="form form-vertical">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-12 mb-1">
+                            <label class="form-label" for="id_title">Sarlavha</label>
+                            <div class="input-group input-group-merge">
+                                <span class="input-group-text"><i data-feather="type"></i></span>
+                                {{ form.title }}
+                            </div>
+                            {% if form.title.errors %}
+                            <div class="text-danger small mt-25">{{ form.title.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6 col-12 mb-1">
+                            <label class="form-label" for="id_category">Kategoriya</label>
+                            {{ form.category }}
+                            {% if form.category.errors %}
+                            <div class="text-danger small mt-25">{{ form.category.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6 col-12 mb-1">
+                            <label class="form-label" for="id_image">Asosiy Rasm</label>
+                            {{ form.image }}
+                            {% if form.image.errors %}
+                            <div class="text-danger small mt-25">{{ form.image.errors }}</div>
+                            {% endif %}
+                            {% if form.instance.image %}
+                            <div class="mt-50">
+                                <span class="badge badge-light-secondary">Joriy rasm:</span>
+                                <a href="{{ form.instance.image.url }}" target="_blank" class="small ms-50">{{form.instance.image.name }}</a>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-12 mb-1">
+                            <label class="form-label" for="id_tags">Teglar</label>
+                            {{ form.tags }}
+                            {% if form.tags.errors %}
+                            <div class="text-danger small mt-25">{{ form.tags.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-12 mb-1">
+                            <label class="form-label">Mazmuni</label>
+                            {{ form.media }}
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                            <div class="text-danger small mt-25">{{ form.description.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-12 mt-2">
+                            <button type="submit" class="btn btn-primary me-1">
+                                <i data-feather="save" class="me-25"></i> Saqlash
+                            </button>
+                            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">
+                                <i data-feather="x" class="me-25"></i> Bekor qilish
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'vendors/js/forms/select/select2.full.min.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        'use strict';
+
+        var select = $('.select2');
+
+        // jQuery Select2
+        if (select.length) {
+            select.each(function () {
+                var $this = $(this);
+                $this.wrap('<div class="position-relative"></div>');
+                $this.select2({
+                    // the following code is used with colors and assets etc.
+                    dropdownParent: $this.parent()
+                });
+            });
+        }
+    });
+</script>
+{% endblock %}

@@ -30,13 +30,18 @@
                     <div class="border-top pt-1 mt-2">
                         <div class="d-flex align-items-center justify-content-between mb-1">
                             <div class="d-flex align-items-center">
-                                <button type="button" class="btn btn-sm btn-outline-success me-1">
+                                <button type="button"
+                                        class="btn btn-sm btn-outline-success me-1"
+                                        onclick="react(1)">
                                     <i data-feather="thumbs-up" class="me-25"></i>
-                                    <span>{{ post.likes }}</span>
+                                    <span id="likes-count">{{ post.likes_count }}</span>
                                 </button>
-                                <button type="button" class="btn btn-sm btn-outline-danger">
+
+                                <button type="button"
+                                        class="btn btn-sm btn-outline-danger"
+                                        onclick="react(-1)">
                                     <i data-feather="thumbs-down" class="me-25"></i>
-                                    <span>{{ post.dislikes }}</span>
+                                    <span id="dislikes-count">{{ post.dislikes_count }}</span>
                                 </button>
                             </div>
                             <div class="text-muted">
@@ -48,6 +53,10 @@
                             {% for tag in post.tags.all %}
                                 <a href="{% url 'tag_posts' tag.slug %}"
                                    class="btn btn-sm btn-light-secondary mb-25 me-25">#{{ tag.name }}</a>
+                            {% empty %}
+                                <div class="col-12 text-center p-5">
+                    <div class="text-muted small">Teglar mavjud emas</div>
+                                </div>
                             {% endfor %}
                         </div>
                     </div>
@@ -82,6 +91,8 @@
 
         <!-- Sidebar -->
         <div class="col-lg-4 col-12">
+            <div class="post-sidebar">
+
             <!-- Latest news -->
             <h4 class="mb-1">So'nggi yangiliklar</h4>
             <div class="card mb-2">
@@ -145,6 +156,26 @@
                     {% endfor %}
                 </div>
             </div>
+            </div>
         </div>
     </div>
+    <script>
+        function react(value) {
+            fetch("{% url 'post-react' post.slug %}", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}",
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: "value=" + value
+            })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.likes !== undefined) {
+                        document.getElementById("likes-count").innerText = data.likes
+                        document.getElementById("dislikes-count").innerText = data.dislikes
+                    }
+                })
+        }
+    </script>
 {% endblock %}

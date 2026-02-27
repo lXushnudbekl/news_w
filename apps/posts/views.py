@@ -1,9 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.shortcuts import redirect
+from django.http import JsonResponse
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.db.models import F, Q, Sum
+from django.views import View
 from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
-from .models import Post, PostView, Tag
+from .models import Post, PostView, Tag, PostReaction
 from .forms import PostForm
 from apps.categories.models import Category
 
@@ -69,7 +71,6 @@ class PostDetailView(DetailView):
         
         return context
 
-
 class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Post
     form_class = PostForm
@@ -126,7 +127,43 @@ class PostSearchView(ListView):
         context["query"] = self.request.GET.get("q")
         return context
 
+class PostReactView(LoginRequiredMixin, View):
+    def post(self, request, slug):
+        post = get_object_or_404(Post, slug=slug)
+        user = request.user
 
+        try:
+            value = int(request.POST.get("value"))
+        except (TypeError, ValueError):
+            return JsonResponse({"error": "Invalid value"}, status=400)
+
+        if value not in [PostReaction.LIKE, PostReaction.DISLIKE]:
+            return JsonResponse({"error": "Invalid reaction"}, status=400)
+
+        reaction, created = PostReaction.objects.get_or_create(
+            post=post,
+            user=user,
+            defaults={"value": value}
+        )
+
+        if not created:
+            if reaction.value == value:
+                reaction.delete()
+                status = "removed"
+            else:
+                reaction.value = value
+                reaction.save()
+                status = "changed"
+        else:
+            status = "added"
+
+        return JsonResponse({
+            "status": status,
+            "likes": post.likes_count,
+            "dislikes": post.dislikes_count
+        })
+
+post_react_view = PostReactView.as_view()
 post_detail_view = PostDetailView.as_view()
 post_search_view = PostSearchView.as_view()
 post_create_view = PostCreateView.as_view()

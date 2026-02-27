@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from .models import Tariff, Subscription
 
+
 class PricingView(TemplateView):
     template_name = "subscriptions/pricing.html"
 
@@ -13,14 +14,17 @@ class PricingView(TemplateView):
         context["tariffs"] = Tariff.objects.exclude(code="free").order_by("price")
         return context
 
+pricing_view = PricingView.as_view()
+
+
 class PurchaseTariffView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         tariff_id = request.POST.get("tariff_id")
         tariff = Tariff.objects.get(id=tariff_id)
-        
+
         # Deactivate old active subscriptions for this user
         Subscription.objects.filter(user=request.user, is_active=True).update(is_active=False)
-        
+
         # Create new subscription
         subscription = Subscription.objects.create(
             user=request.user,
@@ -29,5 +33,8 @@ class PurchaseTariffView(LoginRequiredMixin, View):
             start_date=timezone.now(),
             end_date=timezone.now() + timezone.timedelta(days=tariff.duration_days)
         )
-        
+
         return redirect("dashboard")
+
+
+purchase_tariff_view = PurchaseTariffView.as_view()

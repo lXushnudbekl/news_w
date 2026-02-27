@@ -1,7 +1,7 @@
 from django.views.generic import ListView
 
-from .models import Tag
-from ..posts.models import Post
+from apps.tags.models import Tag
+from apps.posts.models import Post
 
 
 class TagPostListView(ListView):
@@ -25,3 +25,4 @@ class TagPostListView(ListView):
         slug = self.kwargs.get("slug")
         context["tag"] = Tag.objects.get(slug=slug)
         return context
+tag_post_view = TagPostListView.as_view()

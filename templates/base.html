@@ -1,4 +1,6 @@
 {% load static %}
+{% load i18n static %}
+
 <!DOCTYPE html>
 <html class="loading" lang="uz" data-textdirection="ltr">
 <!-- BEGIN: Head-->
@@ -10,12 +12,13 @@
     <title>{% block title %}Zamin.uz{% endblock %}</title>
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'images/ico/favicon.ico' %}">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600"
-        rel="stylesheet">
+          rel="stylesheet">
 
     <!-- BEGIN: Vendor CSS-->
     <link rel="stylesheet" type="text/css" href="{% static 'vendors/css/vendors.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'vendors/css/charts/apexcharts.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'vendors/css/extensions/toastr.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'vendors/css/flag-icons/flag-icons.min.css' %}">
     <!-- END: Vendor CSS-->
 
     <!-- BEGIN: Theme CSS-->
@@ -36,6 +39,90 @@
     <!-- BEGIN: Custom CSS-->
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
     <style>
+        /* Dark mode live search */
+        html.dark-layout .live-search-dropdown {
+            background: #283046; /* Vuexy dark card rangi */
+            border-color: #3b4253;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, .4);
+        }
+
+        html.dark-layout .live-search-item {
+            color: #d0d2d6;
+        }
+
+        html.dark-layout .live-search-item:hover {
+            background: #161d31;
+        }
+
+        html.dark-layout .live-search-title {
+            color: #d0d2d6;
+        }
+
+        html.dark-layout .live-search-empty {
+            color: #b4b7bd;
+        }
+
+        .header-navbar-shadow {
+            display: none
+        }
+
+        .navbar {
+            margin-bottom: 0 !important;
+        }
+
+        .live-search-empty {
+            padding: 12px;
+            text-align: center;
+            font-size: 13px;
+            color: #888;
+        }
+
+        .header-navbar-shadow {
+            display: none !important;
+        }
+
+        .live-search-dropdown {
+            position: absolute;
+            top: 36px;
+            left: 0;
+            width: 260px; /* inputdan biroz keng */
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, .08);
+            border: 1px solid #eee;
+            overflow: hidden;
+            display: none;
+            z-index: 9999;
+        }
+
+        .live-search-item {
+            display: flex;
+            align-items: center;
+            padding: 9px 11px;
+            text-decoration: none;
+            color: #222;
+            gap: 10px;
+            transition: background .18s;
+        }
+
+        .live-search-item:hover {
+            background: #f4f6fb;
+        }
+
+        .live-search-thumb {
+            width: 38px;
+            height: 38px;
+            border-radius: 7px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .live-search-title {
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 1.25;
+        }
+
         /* Sticky category bar */
         .header-navbar.navbar-horizontal.floating-nav {
             position: sticky !important;
@@ -55,7 +142,10 @@
         html.dark-layout .zamin-post-item {
             border-bottom-color: #3b4253;
         }
-
+.post-sidebar {
+    position: sticky;
+    top: 10px;   /* navbar balandligi + gap */
+}
         .zamin-post-image {
             width: 90px;
             height: 60px;
@@ -98,6 +188,70 @@
             flex-direction: column;
             justify-content: flex-end;
         }
+
+        /* Profile Dropdown Hover Fix */
+
+
+        /* Brand Section Styling */
+        .header-navbar[data-nav="brand-center"] {
+            background: #fff !important;
+            border-bottom: 1px solid #ebe9f1;
+            transition: all 0.3s ease;
+        }
+
+        html.dark-layout .header-navbar[data-nav="brand-center"] {
+            background: #161d31 !important;
+            border-bottom: 1px solid #3b4253;
+        }
+
+        .navbar-brand h2.brand-text {
+            margin: 0 !important;
+            padding: 1rem 0;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #7367f0;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 2px 4px rgba(115, 103, 240, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand:hover h2.brand-text {
+            transform: scale(1.02);
+            text-shadow: 0 4px 8px rgba(115, 103, 240, 0.2);
+        }
+
+        .header-navbar {
+            margin-bottom: 0 !important;
+            padding-bottom: 0 !important;
+            height: 62px;
+        }
+
+        .horizontal-menu-wrapper {
+            position: sticky;
+            top: 62px;
+            margin-top: 0 !important;
+            padding-top: 0 !important;
+            z-index: 1030;
+        }
+
+        .app-content {
+            padding-top: 40px !important;
+        }
+
+        .zamin-topbar {
+            position: 0;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1050;
+        }
+
+        html.dark-layout .dropdown-language .selected-language {
+            color: #b4b7bd;
+        }
+
+
     </style>
     <!-- END: Custom CSS-->
 
@@ -106,229 +260,256 @@
 
 <!-- BEGIN: Body-->
 
-<body class="horizontal-layout horizontal-menu  navbar-floating footer-static  " data-open="hover"
-    data-menu="horizontal-menu" data-col="">
+<body class="horizontal-layout horizontal-menu footer-static" data-open="hover"
+      data-menu="horizontal-menu" data-col="">
 
-    <!-- BEGIN: Header-->
-    <nav class="header-navbar navbar-expand-lg navbar navbar-fixed align-items-center navbar-shadow navbar-brand-center"
-        data-nav="brand-center">
-        <div class="navbar-header d-xl-block d-none">
-            <ul class="nav navbar-nav">
-                <li class="nav-item">
-                    <a class="navbar-brand" href="/">
-                        <h2 class="brand-text mb-0 fw-bolder">Zamin.uz</h2>
+<!-- BEGIN: Header-->
+<!-- BEGIN: Main Menu (Sticky)-->
+<nav class="header-navbar navbar-expand-lg navbar navbar-shadow navbar-brand-center zamin-topbar">
+    <div class="container-xxl d-flex align-items-center">
+
+        <!-- Logo -->
+        <a class="navbar-brand fw-bold me-3" href="/">Zamin.uz</a>
+
+        <!-- Categories -->
+        <ul class="navbar-nav flex-row gap-2">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'category_posts' slug='ozbekiston' %}">
+                    <i data-feather="map-pin"></i> O'zbekiston
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'category_posts' slug='jahon' %}">
+                    <i data-feather="globe"></i> Jahon
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'category_posts' slug='iqtisodiyot' %}">
+                    <i data-feather="trending-up"></i> Iqtisodiyot
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'category_posts' slug='jamiyat' %}">
+                    <i data-feather="users"></i> Jamiyat
+                </a>
+            </li>
+        </ul>
+
+        <!-- Right -->
+        <ul class="navbar-nav ms-auto align-items-center">
+
+            <!-- Search -->
+            <li class="nav-item position-relative me-2">
+                <input id="liveSearchInput"
+                       class="form-control form-control-sm"
+                       placeholder="Qidirish..."
+                       style="width:160px;">
+                <div id="liveSearchResults" class="live-search-dropdown"></div>
+
+            </li>
+
+            <!-- Theme -->
+            <li class="nav-item">
+                <a class="nav-link nav-link-style">
+                    <i data-feather="moon"></i>
+                </a>
+            </li>
+
+            <!-- User -->
+            {% if user.is_authenticated %}
+                <li class="nav-item dropdown dropdown-user">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown">
+                        <span class="me-50">{{ request.user.username }}</span>
+                        <img class="round"
+                             src="
+
+
+
+
+
+
+
+
+                                     {% if request.user.avatar %}{{ request.user.avatar.url }}{% else %}{% static 'images/portrait/small/avatar-s-11.jpg' %}{% endif %}"
+                             height="28" width="28">
                     </a>
-                </li>
-            </ul>
-        </div>
-        <div class="navbar-container d-flex content">
-            <ul class="nav navbar-nav d-xl-none">
-                <li class="nav-item"><a class="nav-link menu-toggle" href="#"><i class="ficon"
-                            data-feather="menu"></i></a></li>
-            </ul>
-        </div>
-    </nav>
-    <!-- END: Header-->
-
-    <!-- BEGIN: Main Menu (Sticky)-->
-    <div class="horizontal-menu-wrapper sticky-top" style="top: 62px; z-index: 1030;">
-        <div
-            class="header-navbar navbar-expand-sm navbar navbar-horizontal navbar-light navbar-shadow menu-border container-xxl">
-            <div class="navbar-container main-menu-content d-flex justify-content-between align-items-center w-100">
-                <!-- Left Side: Categories -->
-                <ul class="nav navbar-nav" id="main-menu-navigation">
-                    <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center"
-                            href="{% url 'category_posts' slug='ozbekiston' %}">
-                            <i data-feather="map-pin"></i><span>O'zbekiston</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href="{% url 'category_posts' slug='jahon' %}">
-                            <i data-feather="globe"></i><span>Jahon</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center"
-                            href="{% url 'category_posts' slug='iqtisodiyot' %}">
-                            <i data-feather="trending-up"></i><span>Iqtisodiyot</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href="{% url 'category_posts' slug='jamiyat' %}">
-                            <i data-feather="users"></i><span>Jamiyat</span>
-                        </a>
-                    </li>
-                </ul>
-
-                <!-- Right Side: Search, Theme, Profile -->
-                <ul class="nav navbar-nav ms-auto align-items-center">
-                    <!-- Search -->
-                    <li class="nav-item d-none d-lg-block">
-                        <form action="{% url 'post_search' %}" method="GET">
-                            <div class="d-flex align-items-center bg-light rounded-pill px-1 me-1"
-                                style="border: 1px solid #ddd;">
-                                <i data-feather="search" class="font-small-3 text-muted"></i>
-                                <input type="text" name="q" class="form-control border-0 bg-transparent py-25 px-50"
-                                    placeholder="Qidiruv..." style="width: 150px; font-size: 0.85rem;"
-                                    value="{{ query|default:'' }}">
-                            </div>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <a class="dropdown-item" href="{% url 'dashboard' %}">Profile</a>
+                        <form method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button class="dropdown-item">Logout</button>
                         </form>
-                    </li>
-                    <!-- Theme -->
-                    <li class="nav-item">
-                        <a class="nav-link nav-link-style">
-                            <i class="ficon" data-feather="moon"></i>
-                        </a>
-                    </li>
-                    <!-- User Profile -->
-                    {% if user.is_authenticated %}
-                    <li class="nav-item dropdown dropdown-user">
-                        <a class="nav-link dropdown-toggle dropdown-user-link" id="dropdown-user" href="#"
-                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <div class="user-nav d-sm-flex d-none">
-                                <span class="user-name fw-bolder">{{ user.username|default:"User"}}</span>
-                            </div>
-                            <span class="avatar">
-                                <img class="round" src="{% static 'images/portrait/small/avatar-s-11.jpg' %}"
-                                    alt="avatar" height="32" width="32">
-                            </span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-user">
-                            <a class="dropdown-item" href="{% url 'dashboard' %}"><i class="me-50"
-                                    data-feather="user"></i>
-                                Profile</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{% url 'logout' %}"><i class="me-50"
-                                    data-feather="power"></i>
-                                Logout</a>
-                        </div>
-                    </li>
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link px-50" href="{% url 'login' %}"><i data-feather="log-in" class="me-25"></i>
-                            Kirish</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link px-50" href="{% url 'register' %}"><i data-feather="user-plus"
-                                class="me-25"></i> Ro'yxatdan o'tish</a>
-                    </li>
-                    {% endif %}
+                    </div>
+                </li>
+            {% endif %}
+        </ul>
+
+    </div>
+</nav>
+<!-- END: Main Menu-->
+
+<!-- BEGIN: Content-->
+<div class="app-content content ">
+    <div class="content-overlay"></div>
+    <div class="header-navbar-shadow"></div>
+    <div class="content-wrapper container-xxl p-0">
+        <div class="content-header row">
+        </div>
+        <div class="content-body">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+<!-- END: Content-->
+
+<div class="sidenav-overlay"></div>
+<div class="drag-target"></div>
+
+<!-- BEGIN: Footer-->
+<footer class="footer footer-static footer-light border-top mt-5 pt-3 pb-3">
+    <div class="container-xxl">
+        <div class="row">
+            <div class="col-md-4 col-12 mb-2">
+                <h5 class="fw-bolder">Zamin.uz</h5>
+                <p class="text-muted small mt-1">
+                    Zamin.uz - O'zbekiston va jahon yangiliklari, tahliliy materiallar va eng so'nggi xabarlar
+                    portalidir.
+                    Sifatli kontent va aniq ma'lumotlar bizning asosiy maqsadimizdir.
+                </p>
+            </div>
+            <div class="col-md-4 col-12 mb-2">
+                <h5 class="fw-bolder">Sayt haqida</h5>
+                <ul class="list-unstyled small mt-1">
+                    <li><a href="#" class="text-muted">Biz haqimizda</a></li>
+                    <li><a href="#" class="text-muted">Foydalanish shartlari</a></li>
+                    <li><a href="#" class="text-muted">Maxfiylik siyosati</a></li>
+                    <li><a href="#" class="text-muted">Aloqa</a></li>
                 </ul>
             </div>
-        </div>
-    </div>
-    <!-- END: Main Menu-->
-
-    <!-- BEGIN: Content-->
-    <div class="app-content content ">
-        <div class="content-overlay"></div>
-        <div class="header-navbar-shadow"></div>
-        <div class="content-wrapper container-xxl p-0">
-            <div class="content-header row">
-            </div>
-            <div class="content-body">
-                {% block content %}
-                {% endblock %}
+            <div class="col-md-4 col-12 mb-2">
+                <h5 class="fw-bolder">Obuna bo'ling</h5>
+                <p class="text-muted small mt-1">Yangiliklarni birinchilardan bo'lib bilish uchun bizni ijtimoiy
+                    tarmoqlarda kuzatib boring.</p>
+                <div class="d-flex mt-1">
+                    <a href="#" class="me-1 text-primary"><i data-feather="facebook"></i></a>
+                    <a href="#" class="me-1 text-info"><i data-feather="twitter"></i></a>
+                    <a href="#" class="me-1 text-danger"><i data-feather="instagram"></i></a>
+                    <a href="#" class="text-primary"><i data-feather="send"></i></a>
+                </div>
             </div>
         </div>
-    </div>
-    <!-- END: Content-->
-
-    <div class="sidenav-overlay"></div>
-    <div class="drag-target"></div>
-
-    <!-- BEGIN: Footer-->
-    <footer class="footer footer-static footer-light border-top mt-5 pt-3 pb-3">
-        <div class="container-xxl">
-            <div class="row">
-                <div class="col-md-4 col-12 mb-2">
-                    <h5 class="fw-bolder">Zamin.uz</h5>
-                    <p class="text-muted small mt-1">
-                        Zamin.uz - O'zbekiston va jahon yangiliklari, tahliliy materiallar va eng so'nggi xabarlar
-                        portalidir.
-                        Sifatli kontent va aniq ma'lumotlar bizning asosiy maqsadimizdir.
-                    </p>
-                </div>
-                <div class="col-md-4 col-12 mb-2">
-                    <h5 class="fw-bolder">Sayt haqida</h5>
-                    <ul class="list-unstyled small mt-1">
-                        <li><a href="#" class="text-muted">Biz haqimizda</a></li>
-                        <li><a href="#" class="text-muted">Foydalanish shartlari</a></li>
-                        <li><a href="#" class="text-muted">Maxfiylik siyosati</a></li>
-                        <li><a href="#" class="text-muted">Aloqa</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-4 col-12 mb-2">
-                    <h5 class="fw-bolder">Obuna bo'ling</h5>
-                    <p class="text-muted small mt-1">Yangiliklarni birinchilardan bo'lib bilish uchun bizni ijtimoiy
-                        tarmoqlarda kuzatib boring.</p>
-                    <div class="d-flex mt-1">
-                        <a href="#" class="me-1 text-primary"><i data-feather="facebook"></i></a>
-                        <a href="#" class="me-1 text-info"><i data-feather="twitter"></i></a>
-                        <a href="#" class="me-1 text-danger"><i data-feather="instagram"></i></a>
-                        <a href="#" class="text-primary"><i data-feather="send"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="row mt-2 border-top pt-2">
-                <div class="col-12 text-center">
-                    <p class="clearfix mb-0">
+        <div class="row mt-2 border-top pt-2">
+            <div class="col-12 text-center">
+                <p class="clearfix mb-0">
                         <span class="float-md-start d-block d-md-inline-block mt-25">COPYRIGHT &copy; 2026
                             <a class="ms-25" href="/" target="_blank">Zamin.uz</a>
                             <span class="d-none d-sm-inline-block">, Barcha huquqlar himoyalangan</span></span>
-                    </p>
-                </div>
+                </p>
             </div>
         </div>
-    </footer>
-    <button class="btn btn-primary btn-icon scroll-top" type="button"><i data-feather="arrow-up"></i></button>
-    <!-- END: Footer-->
+    </div>
+</footer>
+<button class="btn btn-primary btn-icon scroll-top" type="button"><i data-feather="arrow-up"></i></button>
+<!-- END: Footer-->
 
 
-    <!-- BEGIN: Vendor JS-->
-    <script src="{% static 'vendors/js/vendors.min.js' %}"></script>
-    <!-- BEGIN Vendor JS-->
+<!-- BEGIN: Vendor JS-->
+<script src="{% static 'vendors/js/vendors.min.js' %}"></script>
+<!-- BEGIN Vendor JS-->
 
-    <!-- BEGIN: Page Vendor JS-->
-    <script src="{% static 'vendors/js/ui/jquery.sticky.js' %}"></script>
-    <script src="{% static 'vendors/js/charts/apexcharts.min.js' %}"></script>
-    <script src="{% static 'vendors/js/extensions/toastr.min.js' %}"></script>
-    <!-- END: Page Vendor JS-->
+<!-- BEGIN: Page Vendor JS-->
+<script src="{% static 'vendors/js/ui/jquery.sticky.js' %}"></script>
+<script src="{% static 'vendors/js/charts/apexcharts.min.js' %}"></script>
+<script src="{% static 'vendors/js/extensions/toastr.min.js' %}"></script>
+<!-- END: Page Vendor JS-->
 
-    <!-- BEGIN: Theme JS-->
-    <script src="{% static 'js/core/app-menu.js' %}"></script>
-    <script src="{% static 'js/core/app.js' %}"></script>
-    <!-- END: Theme JS-->
+<!-- BEGIN: Theme JS-->
+<script src="{% static 'js/core/app-menu.js' %}"></script>
+<script src="{% static 'js/core/app.js' %}"></script>
+<!-- END: Theme JS-->
 
-    <!-- BEGIN: Page JS-->
-    <!-- <script src="{% static 'js/scripts/pages/dashboard-ecommerce.js' %}"></script> -->
-    <!-- END: Page JS-->
+<!-- BEGIN: Page JS-->
+<!-- <script src="{% static 'js/scripts/pages/dashboard-ecommerce.js' %}"></script> -->
+<!-- END: Page JS-->
 
-    <script>
-        $(window).on('load', function () {
-            if (feather) {
-                feather.replace({
-                    width: 14,
-                    height: 14
-                });
+<script>
+    $(window).on('load', function () {
+
+        if (feather) {
+            feather.replace({width: 14, height: 14});
+        }
+
+        $('.nav-link-style').on('click', function () {
+            var moon = $(this).find('[data-feather="moon"]');
+            var sun = $(this).find('[data-feather="sun"]');
+            if ($('html').hasClass('dark-layout')) {
+                moon.removeClass('d-none');
+                sun.addClass('d-none');
+            } else {
+                moon.addClass('d-none');
+                sun.removeClass('d-none');
+            }
+            feather.replace();
+        });
+
+        // 🔎 LIVE SEARCH
+        var $input = $('#liveSearchInput');
+        var $box = $('#liveSearchResults');
+        var timer = null;
+
+        $input.on('input', function () {
+            var q = $(this).val().trim();
+            clearTimeout(timer);
+
+            if (q.length < 2) {
+                $box.hide();
+                return;
             }
 
-            // Theme toggle sun/moon icon management
-            $('.nav-link-style').on('click', function () {
-                var moon = $(this).find('[data-feather="moon"]');
-                var sun = $(this).find('[data-feather="sun"]');
-                if ($('html').hasClass('dark-layout')) {
-                    moon.removeClass('d-none');
-                    sun.addClass('d-none');
-                } else {
-                    moon.addClass('d-none');
-                    sun.removeClass('d-none');
-                }
-                feather.replace();
-            });
-        })
-    </script>
+            timer = setTimeout(function () {
+
+                $.get('/post/live-search/', {q: q}, function (data) {
+
+                    // ❗ NATIJA YO‘Q BO‘LSA
+                    if (!data.results || !data.results.length) {
+                        $box.html(`
+        <div class="live-search-empty d-flex align-items-center justify-content-center gap-1">
+            <i data-feather="search"></i>
+            <span>Hech narsa topilmadi</span>
+        </div>
+    `).show();
+
+                        feather.replace();   // ikonka chizish uchun
+                        return;
+                    }
+                    var html = '';
+
+                    data.results.forEach(function (item) {
+                        html += `
+                        <a href="/post/${item.slug}/"
+                           class="live-search-item">
+                            ${item.image ? `<img src="${item.image}" class="live-search-thumb">` : ''}
+                            <div class="live-search-title">${item.title}</div>
+                        </a>
+                    `;
+                    });
+
+                    $box.html(html).show();
+
+                });
+
+            }, 250);
+        });
+
+        $(document).on('click', function (e) {
+            if (!$(e.target).closest('#liveSearchInput').length) {
+                $box.hide();
+            }
+        });
+
+    });
+</script>
 </body>
 <!-- END: Body-->
 

@@ -9,6 +9,13 @@ from django.db import models
 from django.utils.text import slugify
 from django.utils.crypto import get_random_string
 
+from apps.categories.models import Category
+from apps.tags.models import Tag
+from apps.sms.models import SMSCategorySubscription
+from apps.sms.utils import send_user_sms
+
+User = get_user_model()
+
 
 class Post(models.Model):
     STATUS_CHOICES = (
@@ -23,28 +30,50 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(unique=True)
     views_count = models.PositiveIntegerField(default=0)
-    likes = models.PositiveIntegerField(default=0)
-    dislikes = models.PositiveIntegerField(default=0)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    author = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True)
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     tags = models.ManyToManyField(Tag, blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
 
     def __str__(self):
         return self.title
 
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            base_slug = slugify(self.title)
-            slug = base_slug
-            while Post.objects.filter(slug=slug).exists():
-                slug = f"{base_slug}-{get_random_string(4)}"
-            self.slug = slug
-        super().save(*args, **kwargs)
+    # 👇 SHU YERGA QO‘SHILADI
+    @property
+    def likes_count(self):
+        return self.reactions.filter(value=PostReaction.LIKE).count()
 
+    @property
+    def dislikes_count(self):
+        return self.reactions.filter(value=PostReaction.DISLIKE).count()
 
+    def notify_sms(self):
+        subs = SMSCategorySubscription.objects.filter(category=self.category)
+        for sub in subs:
+            user = sub.user
+            text = f"Yangi {self.category.name}: {self.title}"
+            send_user_sms(user, text)
 
-User = get_user_model()
+class PostReaction(models.Model):
+    LIKE = 1
+    DISLIKE = -1
+
+    VALUE_CHOICES = (
+        (LIKE, "Like"),
+        (DISLIKE, "Dislike"),
+    )
+
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="reactions")
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    value = models.SmallIntegerField(choices=VALUE_CHOICES)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("post", "user")
+
+    def __str__(self):
+        return f"{self.user} → {self.post} ({self.value})"
+
 
 class PostView(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="views")

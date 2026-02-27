@@ -4,58 +4,61 @@
 {% block title %}Profil sozlamalari - Zamin.uz{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-6 col-12">
-        <div class="card">
-            <div class="card-header border-bottom">
-                <h4 class="card-title">Profil ma'lumotlari</h4>
-            </div>
-            <div class="card-body pt-2">
-                <form method="POST" action="{% url 'profile_settings' %}" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="mb-1">
-                        <label class="form-label" for="username">Foydalanuvchi nomi</label>
-                        {{ form.username }}
-                    </div>
-                    <div class="mb-1">
-                        <label class="form-label" for="email">Email</label>
-                        {{ form.email }}
-                    </div>
-                    <div class="mb-1">
-                        <label class="form-label" for="phone">Telefon</label>
-                        {{ form.phone }}
-                    </div>
-                    <div class="mb-1">
-                        <label class="form-label" for="avatar">Profil rasmi (Avatar)</label>
-                        {{ form.avatar }}
-                    </div>
-                    <button type="submit" class="btn btn-primary mt-1">Saqlash</button>
-                    <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary mt-1">Bekor qilish</a>
-                </form>
+    <div class="row">
+        <div class="col-md-6 col-12">
+            <div class="card">
+                <div class="card-header border-bottom">
+                    <h4 class="card-title">Profil ma'lumotlari</h4>
+                </div>
+                <div class="card-body pt-2">
+                    <form method="POST" action="{% url 'profile_settings' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-1">
+                            <label class="form-label" for="username">Foydalanuvchi nomi</label>
+                            {{ form.username }}
+                        </div>
+                        <div class="mb-1">
+                            <label class="form-label" for="email">Email</label>
+                            {{ form.email }}
+                        </div>
+                        <div class="mb-1">
+                            <label class="form-label" for="phone">Telefon</label>
+                            {{ form.phone }}
+
+                            {% if form.phone.errors %}
+                                <div class="text-danger small mt-25">
+                                    {{ form.phone.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-1">
+                            <label class="form-label" for="avatar">Profil rasmi (Avatar)</label>
+                            {{ form.avatar }}
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-1">Saqlash</button>
+                        <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary mt-1">Bekor qilish</a>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="col-md-6 col-12">
-        <div class="card">
-            <div class="card-header border-bottom">
-                <h4 class="card-title">Parolni o'zgartirish</h4>
-            </div>
-            <div class="card-body pt-2">
-                <form method="POST" action="{% url 'password_change' %}">
-                    {% csrf_token %}
-                    <!-- We'll assume usage of the built-in PasswordChangeForm fields -->
+        <div class="col-md-6 col-12">
+            <div class="card">
+                <div class="card-header border-bottom">
+                    <h4 class="card-title">Parolni o'zgartirish</h4>
+                </div>
+                <div class="card-body pt-2">
                     <div class="alert alert-info" role="alert">
                         <div class="alert-body">
                             Xavfsizlik uchun kuchli paroldan foydalaning.
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-warning mt-1">Parolni o'zgartirish sahifasiga o'tish</button>
+                    <a href="{% url 'password_change' %}" class="btn btn-warning mt-1">Parolni o'zgartirish sahifasiga
+                        o'tish</a>
                     <p class="mt-1 text-muted font-small-3">Eslatma: Bu tugma sizni tizimning parolni o'zgartirish
                         formasiga yo'naltiradi.</p>
-                </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}

@@ -2,135 +2,140 @@
 {% load static %}
 
 {% block content %}
-<div class="row">
-    <!-- Top Section: Grid -->
-    {% with sorted_posts=posts|dictsortreversed:"views_count" %}
-    <!-- Left Sidebar (3 news) -->
-    <div class="col-lg-3 col-12 order-lg-1 order-2">
-        <h4 class="mb-1 border-bottom pb-50"><i data-feather="trending-up" class="me-50"></i>Trendda</h4>
-        {% for post in sorted_posts|slice:"2:5" %}
-        <a href="{% url 'post_detail' post.slug %}" class="zamin-post-item">
-            {% if post.image %}
-            <img src="{{ post.image.url }}" class="zamin-post-image" alt="{{ post.title }}">
-            {% endif %}
-            <div class="zamin-post-content">
-                <span class="zamin-post-title">{{ post.title }}</span>
-                <div class="zamin-post-meta d-flex align-items-center">
-                    <i data-feather="eye" class="me-25 font-small-3"></i>
-                    <span>{{ post.views_count }}</span>
-                </div>
-            </div>
-        </a>
-        {% endfor %}
-    </div>
-
-    <!-- Middle Big News (2 news) -->
-    <div class="col-lg-6 col-12 order-lg-2 order-1">
-        <div class="row">
-            {% for post in sorted_posts|slice:":2" %}
-            <div class="col-12 mb-2">
-                <div class="card main-news-card">
-                    <a href="{% url 'post_detail' post.slug %}">
+    <div class="row">
+        <!-- Top Section: Grid -->
+        {% with sorted_posts=posts|dictsortreversed:"views_count" %}
+            <!-- Left Sidebar (3 news) -->
+            <div class="col-lg-3 col-12 order-lg-1 order-2">
+                <h4 class="mb-1 border-bottom pb-50"><i data-feather="trending-up" class="me-50"></i>Trendda</h4>
+                {% for post in sorted_posts|slice:"2:8" %}
+                    <a href="{% url 'post_detail' post.slug %}" class="zamin-post-item">
                         {% if post.image %}
-                        <img src="{{ post.image.url }}" class="card-img w-100" alt="{{ post.title }}"
-                            style="object-fit:cover; height:320px;">
+                            <img src="{{ post.image.url }}" class="zamin-post-image" alt="{{ post.title }}">
                         {% endif %}
-                        <div class="card-img-overlay d-flex flex-column justify-content-end">
-                            <span class="badge badge-light-danger mb-1" style="width: fit-content;">Asosiy</span>
-                            <h2 class="card-title text-white fw-bolder">{{ post.title }}</h2>
-                            <div class="text-white d-flex align-items-center">
+                        <div class="zamin-post-content">
+                            <span class="zamin-post-title">{{ post.title }}</span>
+                            <div class="zamin-post-meta d-flex align-items-center">
+                                <i data-feather="eye" class="me-25 font-small-3"></i>
+                                <span>{{ post.views_count }}</span>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+
+            <!-- Middle Big News (2 news) -->
+            <div class="col-lg-6 col-12 order-lg-2 order-1">
+                <div class="row">
+                    {% for post in sorted_posts|slice:":2" %}
+                        <div class="col-12 mb-2">
+                            <div class="card main-news-card">
+                                <a href="{% url 'post_detail' post.slug %}">
+                                    {% if post.image %}
+                                        <img src="{{ post.image.url }}" class="card-img w-100" alt="{{ post.title }}"
+                                             style="object-fit:cover; height:320px;">
+                                    {% endif %}
+                                    <div class="card-img-overlay d-flex flex-column justify-content-end">
+                                        <span class="badge badge-light-danger mb-1"
+                                              style="width: fit-content;">Asosiy</span>
+                                        <h2 class="card-title text-white fw-bolder">{{ post.title }}</h2>
+                                        <div class="text-white d-flex align-items-center">
                                 <span class="d-flex align-items-center me-1">
                                     <i data-feather="eye" class="me-25 font-small-3"></i>{{ post.views_count }}
                                 </span>
-                                <span class="d-flex align-items-center">
-                                    <i data-feather="calendar" class="me-25 font-small-3"></i>{{
-                                    post.created_at|date:"d.m.Y" }}
+                                            <span class="d-flex align-items-center">
+                                    <i data-feather="calendar"
+                                       class="me-25 font-small-3"></i>{{ post.created_at|date:"d.m.Y" }}
                                 </span>
+                                        </div>
+                                    </div>
+                                </a>
                             </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Right Sidebar (3 news) -->
+            <div class="col-lg-3 col-12 order-lg-3 order-3">
+                <h4 class="mb-1 border-bottom pb-50"><i data-feather="star" class="me-50"></i>Tavsiya</h4>
+                {% for post in weekly_top_posts|slice:":3" %}
+                    <a href="{% url 'post_detail' post.slug %}" class="zamin-post-item">
+                        {% if post.image %}
+                            <img src="{{ post.image.url }}" class="zamin-post-image" alt="{{ post.title }}">
+                        {% endif %}
+                        <div class="zamin-post-content">
+                            <span class="zamin-post-title">{{ post.title }}</span>
+                            <div class="zamin-post-meta d-flex align-items-center">
+                                <i data-feather="thumbs-up" class="me-25 font-small-3"></i>
+                                <span>{{ post.week_likes }}</span>
+                                <i data-feather="eye" class="ms-50 me-25 font-small-3"></i>
+                                <span>{{ post.views_count }}</span>
+
+                            </div>
+                        </div>
+                    </a>
+                {% empty %}
+                    <div class="text-muted small">Hozircha tavsiyalar yo'q</div>
+                {% endfor %}
+            </div>
+        {% endwith %}
+    </div>
+
+    <!-- Middle Section: Yesterday's News -->
+    <div class="row mt-2">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header border-bottom">
+                    <h4 class="card-title">Kechagi yangiliklar</h4>
+                </div>
+                <div class="card-body pt-2">
+                    <div class="row">
+{% for post in yesterday_posts|slice:":4" %}
+    <div class="col-md-3 col-sm-6 col-12 mb-1">
+                                <a href="{% url 'post_detail' post.slug %}" class="d-block">
+                                    {% if post.image %}
+                                        <img src="{{ post.image.url }}" class="img-fluid rounded mb-50"
+                                             style="height:140px; width:100%; object-fit:cover;">
+                                    {% endif %}
+                                    <div class="fw-bolder text-truncate-2"
+                                         style="font-size: 0.9rem; line-height:1.2;">{{ post.title }}</div>
+
+                                    <small class="text-muted"><i data-feather="eye"
+                                                                 class="me-25 font-small-2"></i>{{ post.views_count }}
+                                    </small>
+                                </a>
+                            </div>
+                        {% empty %}
+                            <div class="col-12 text-center text-muted">Kechagi yangiliklar mavjud emas</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Section: Latest News (Grid 4x5) -->
+    <h4 class="mt-3 mb-1"><i data-feather="clock" class="me-50"></i>So'nggi yangiliklar</h4>
+    <div class="row">
+        {% for post in posts %}
+            <div class="col-xl-3 col-lg-4 col-sm-6 col-12 mb-2">
+                <div class="card h-100 shadow-none border-0 bg-transparent">
+                    <a href="{% url 'post_detail' post.slug %}">
+                        {% if post.image %}
+                            <img src="{{ post.image.url }}" class="img-fluid rounded mb-1"
+                                 style="height:180px; width:100%; object-fit:cover;">
+                        {% endif %}
+                        <h5 class="fw-bolder mb-50 text-truncate-2" style="min-height:3rem;">{{ post.title }}</h5>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <small class="text-muted">{{ post.created_at|date:"d.m.Y H:i" }}</small>
+                            <small class="text-muted"><i data-feather="eye"
+                                                         class="me-25 font-small-3"></i>{{ post.views_count }}</small>
                         </div>
                     </a>
                 </div>
             </div>
-            {% endfor %}
-        </div>
-    </div>
 
-    <!-- Right Sidebar (3 news) -->
-    <div class="col-lg-3 col-12 order-lg-3 order-3">
-        <h4 class="mb-1 border-bottom pb-50"><i data-feather="star" class="me-50"></i>Tavsiya</h4>
-        {% for post in recommended_posts|slice:":3" %}
-        <a href="{% url 'post_detail' post.slug %}" class="zamin-post-item">
-            {% if post.image %}
-            <img src="{{ post.image.url }}" class="zamin-post-image" alt="{{ post.title }}">
-            {% endif %}
-            <div class="zamin-post-content">
-                <span class="zamin-post-title">{{ post.title }}</span>
-                <div class="zamin-post-meta d-flex align-items-center">
-                    <i data-feather="thumbs-up" class="me-25 font-small-3"></i>
-                    <span>{{ post.net_likes }}</span>
-                    <i data-feather="eye" class="ms-50 me-25 font-small-3"></i>
-                    <span>{{ post.views_count }}</span>
-                </div>
-            </div>
-        </a>
-        {% empty %}
-        <div class="text-muted small">Hozircha tavsiyalar yo'q</div>
         {% endfor %}
     </div>
-    {% endwith %}
-</div>
-
-<!-- Middle Section: Yesterday's News -->
-<div class="row mt-2">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header border-bottom">
-                <h4 class="card-title">Kechagi yangiliklar</h4>
-            </div>
-            <div class="card-body pt-2">
-                <div class="row">
-                    {% for post in posts|slice:"8:12" %}
-                    <div class="col-md-3 col-sm-6 col-12 mb-1">
-                        <a href="{% url 'post_detail' post.slug %}" class="d-block">
-                            {% if post.image %}
-                            <img src="{{ post.image.url }}" class="img-fluid rounded mb-50"
-                                style="height:140px; width:100%; object-fit:cover;">
-                            {% endif %}
-                            <div class="fw-bolder text-truncate-2" style="font-size: 0.9rem; line-height:1.2;">{{
-                                post.title }}</div>
-                            <small class="text-muted"><i data-feather="eye" class="me-25 font-small-2"></i>{{
-                                post.views_count }}</small>
-                        </a>
-                    </div>
-                    {% empty %}
-                    <div class="col-12 text-center text-muted">Kechagi yangiliklar mavjud emas</div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Bottom Section: Latest News (Grid 4x5) -->
-<h4 class="mt-3 mb-1"><i data-feather="clock" class="me-50"></i>So'nggi yangiliklar</h4>
-<div class="row">
-    {% for post in posts %}
-    <div class="col-xl-3 col-lg-4 col-sm-6 col-12 mb-2">
-        <div class="card h-100 shadow-none border-0 bg-transparent">
-            <a href="{% url 'post_detail' post.slug %}">
-                {% if post.image %}
-                <img src="{{ post.image.url }}" class="img-fluid rounded mb-1"
-                    style="height:180px; width:100%; object-fit:cover;">
-                {% endif %}
-                <h5 class="fw-bolder mb-50 text-truncate-2" style="min-height:3rem;">{{ post.title }}</h5>
-                <div class="d-flex align-items-center justify-content-between">
-                    <small class="text-muted">{{ post.created_at|date:"d.m.Y H:i" }}</small>
-                    <small class="text-muted"><i data-feather="eye" class="me-25 font-small-3"></i>{{ post.views_count
-                        }}</small>
-                </div>
-            </a>
-        </div>
-    </div>
-    {% endfor %}
-</div>
 {% endblock %}
