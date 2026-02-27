@@ -55,7 +55,7 @@
                                    class="btn btn-sm btn-light-secondary mb-25 me-25">#{{ tag.name }}</a>
                             {% empty %}
                                 <div class="col-12 text-center p-5">
-                    <div class="text-muted small">Teglar mavjud emas</div>
+                                    <div class="text-muted small">Teglar mavjud emas</div>
                                 </div>
                             {% endfor %}
                         </div>
@@ -85,6 +85,11 @@
                             </a>
                         </div>
                     </div>
+
+                {% empty %}
+                    <div class="col-12 text-center text-muted">
+                        Mavzuga oid yangiliklar mavjud emas
+                    </div>
                 {% endfor %}
             </div>
         </div>
@@ -93,69 +98,69 @@
         <div class="col-lg-4 col-12">
             <div class="post-sidebar">
 
-            <!-- Latest news -->
-            <h4 class="mb-1">So'nggi yangiliklar</h4>
-            <div class="card mb-2">
-                <div class="card-body p-1">
-                    {% for p in latest_posts|slice:":5" %}
-                        <a href="{% url 'post_detail' p.slug %}" class="zamin-post-item">
-                            {% if p.image %}
-                                <img src="{{ p.image.url }}" class="zamin-post-image" alt="{{ p.title }}">
-                            {% else %}
-                                <div class="zamin-post-image bg-light d-flex align-items-center justify-content-center">
-                                    <i data-feather="image"></i>
+                <!-- Latest news -->
+                <h4 class="mb-1">So'nggi yangiliklar</h4>
+                <div class="card mb-2">
+                    <div class="card-body p-1">
+                        {% for p in latest_posts|slice:":5" %}
+                            <a href="{% url 'post_detail' p.slug %}" class="zamin-post-item">
+                                {% if p.image %}
+                                    <img src="{{ p.image.url }}" class="zamin-post-image" alt="{{ p.title }}">
+                                {% else %}
+                                    <div class="zamin-post-image bg-light d-flex align-items-center justify-content-center">
+                                        <i data-feather="image"></i>
+                                    </div>
+                                {% endif %}
+                                <div class="zamin-post-content">
+                                    <span class="zamin-post-title">{{ p.title }}</span>
+                                    <div class="zamin-post-meta">
+                                        <span><i data-feather="eye"></i> {{ p.views_count }}</span>
+                                    </div>
                                 </div>
-                            {% endif %}
-                            <div class="zamin-post-content">
-                                <span class="zamin-post-title">{{ p.title }}</span>
-                                <div class="zamin-post-meta">
-                                    <span><i data-feather="eye"></i> {{ p.views_count }}</span>
-                                </div>
-                            </div>
-                        </a>
-                    {% endfor %}
+                            </a>
+                        {% endfor %}
+                    </div>
                 </div>
-            </div>
 
-            <!-- Popular news -->
-            <h4 class="mb-1">Ommabop yangiliklar</h4>
-            <div class="card mb-2">
-                <div class="card-body p-1">
-                    {% for p in all_most_viewed|slice:":5" %}
-                        <a href="{% url 'post_detail' p.slug %}" class="zamin-post-item">
-                            {% if p.image %}
-                                <img src="{{ p.image.url }}" class="zamin-post-image" alt="{{ p.title }}">
-                            {% endif %}
-                            <div class="zamin-post-content">
-                                <span class="zamin-post-title">{{ p.title }}</span>
-                                <div class="zamin-post-meta">
-                                    <span><i data-feather="eye"></i> {{ p.views_count }}</span>
+                <!-- Popular news -->
+                <h4 class="mb-1">Ommabop yangiliklar</h4>
+                <div class="card mb-2">
+                    <div class="card-body p-1">
+                        {% for p in all_most_viewed|slice:":5" %}
+                            <a href="{% url 'post_detail' p.slug %}" class="zamin-post-item">
+                                {% if p.image %}
+                                    <img src="{{ p.image.url }}" class="zamin-post-image" alt="{{ p.title }}">
+                                {% endif %}
+                                <div class="zamin-post-content">
+                                    <span class="zamin-post-title">{{ p.title }}</span>
+                                    <div class="zamin-post-meta">
+                                        <span><i data-feather="eye"></i> {{ p.views_count }}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
-                    {% endfor %}
+                            </a>
+                        {% endfor %}
+                    </div>
                 </div>
-            </div>
 
-            <!-- Most read in category -->
-            <h4 class="mb-1">Eng ko'p o'qilganlar [{{ post.category.name }}]</h4>
-            <div class="card mb-2">
-                <div class="card-body p-1">
-                    {% for p in category_most_viewed|slice:":5" %}
-                        <a href="{% url 'post_detail' p.slug %}" class="zamin-post-item">
-                            {% if p.image %}
-                                <img src="{{ p.image.url }}" class="zamin-post-image" alt="{{ p.title }}">
-                            {% endif %}
-                            <div class="zamin-post-content">
-                                <span class="zamin-post-title">{{ p.title }}</span>
-                                <div class="zamin-post-meta">
-                                    <span><i data-feather="eye"></i> {{ p.views_count }}</span>
+                <!-- Most read in category -->
+                <h4 class="mb-1">Eng ko'p o'qilganlar [{{ post.category.name }}]</h4>
+                <div class="card mb-2">
+                    <div class="card-body p-1">
+                        {% for p in category_most_viewed|slice:":5" %}
+                            <a href="{% url 'post_detail' p.slug %}" class="zamin-post-item">
+                                {% if p.image %}
+                                    <img src="{{ p.image.url }}" class="zamin-post-image" alt="{{ p.title }}">
+                                {% endif %}
+                                <div class="zamin-post-content">
+                                    <span class="zamin-post-title">{{ p.title }}</span>
+                                    <div class="zamin-post-meta">
+                                        <span><i data-feather="eye"></i> {{ p.views_count }}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
-                    {% endfor %}
+                            </a>
+                        {% endfor %}
+                    </div>
                 </div>
-            </div>
             </div>
         </div>
     </div>

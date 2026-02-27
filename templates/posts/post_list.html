@@ -21,9 +21,10 @@
                             </div>
                         </div>
                     </a>
+                {% empty %}
+                    <div class="text-muted small">Hozircha yangiliklar yo'q</div>
                 {% endfor %}
             </div>
-
             <!-- Middle Big News (2 news) -->
             <div class="col-lg-6 col-12 order-lg-2 order-1">
                 <div class="row">
@@ -59,7 +60,7 @@
             <!-- Right Sidebar (3 news) -->
             <div class="col-lg-3 col-12 order-lg-3 order-3">
                 <h4 class="mb-1 border-bottom pb-50"><i data-feather="star" class="me-50"></i>Tavsiya</h4>
-                {% for post in weekly_top_posts|slice:":3" %}
+                {% for post in weekly_top_posts|slice:"2:8" %}
                     <a href="{% url 'post_detail' post.slug %}" class="zamin-post-item">
                         {% if post.image %}
                             <img src="{{ post.image.url }}" class="zamin-post-image" alt="{{ post.title }}">
@@ -91,8 +92,8 @@
                 </div>
                 <div class="card-body pt-2">
                     <div class="row">
-{% for post in yesterday_posts|slice:":4" %}
-    <div class="col-md-3 col-sm-6 col-12 mb-1">
+                        {% for post in yesterday_posts|slice:":4" %}
+                            <div class="col-md-3 col-sm-6 col-12 mb-1">
                                 <a href="{% url 'post_detail' post.slug %}" class="d-block">
                                     {% if post.image %}
                                         <img src="{{ post.image.url }}" class="img-fluid rounded mb-50"
@@ -129,13 +130,18 @@
                         <h5 class="fw-bolder mb-50 text-truncate-2" style="min-height:3rem;">{{ post.title }}</h5>
                         <div class="d-flex align-items-center justify-content-between">
                             <small class="text-muted">{{ post.created_at|date:"d.m.Y H:i" }}</small>
-                            <small class="text-muted"><i data-feather="eye"
-                                                         class="me-25 font-small-3"></i>{{ post.views_count }}</small>
+                            <small class="text-muted">
+                                <i data-feather="eye" class="me-25 font-small-3"></i>{{ post.views_count }}
+                            </small>
                         </div>
                     </a>
                 </div>
             </div>
 
+        {% empty %}
+            <div class="col-12 text-center text-muted">
+                So'nggi yangiliklar mavjud emas
+            </div>
         {% endfor %}
     </div>
 {% endblock %}
